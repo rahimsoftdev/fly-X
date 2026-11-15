@@ -7,6 +7,7 @@ import ContactPage from '@/pages/public/ContactPage'
 import FaqPage from '@/pages/public/FaqPage'
 import HomePage from '@/pages/public/HomePage'
 import MembershipPage from '@/pages/public/MembershipPage'
+import TermsAndConditionsPage from '@/pages/public/TermsAndConditions'
 import { createBrowserRouter } from 'react-router'
 
 const router = createBrowserRouter([
@@ -26,7 +27,10 @@ const router = createBrowserRouter([
             },
             {
                 path: 'faq', Component: FaqPage
-            }
+            },
+            {
+                path: 'terms', Component: TermsAndConditionsPage
+            },
         ]
     },
 
