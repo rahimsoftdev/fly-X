@@ -6,6 +6,7 @@ import UserLayout from '@/layouts/UserLayout'
 import ContactPage from '@/pages/public/ContactPage'
 import FaqPage from '@/pages/public/FaqPage'
 import HomePage from '@/pages/public/HomePage'
+import MembershipPage from '@/pages/public/MembershipPage'
 import { createBrowserRouter } from 'react-router'
 
 const router = createBrowserRouter([
@@ -18,8 +19,12 @@ const router = createBrowserRouter([
                 index: true, Component: HomePage
             },
             {
+                path: "membership", Component: MembershipPage
+            },
+            {
                 path: "contact", Component: ContactPage
-            }, {
+            },
+            {
                 path: 'faq', Component: FaqPage
             }
         ]
