@@ -27,6 +27,7 @@ const HomePage = () => {
                 heading="Ready to Elevate Your Travel Experience?"
                 description="Join the exclusive network of executives and founders who have discovered a smarter way to fly private."
                 buttonText="Become a Member"
+                isDark={true}
             />
         </div>
     );

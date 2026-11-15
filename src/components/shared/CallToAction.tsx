@@ -8,6 +8,7 @@ type CallToActionProps = {
     description: string;
     buttonText: string;
     buttonLink: string;
+    isDark?: boolean
 };
 
 export default function CallToAction({
@@ -18,11 +19,12 @@ export default function CallToAction({
     description,
     buttonText,
     buttonLink,
+    isDark
 }: CallToActionProps) {
     return (
         <section
             id="call-to-action"
-            className="relative isolate overflow-hidden bg-[#0B1220]"
+            className={`relative isolate overflow-hidden ${isDark && 'bg-[#0B1220]'}`}
         >
             {/* Background image */}
             <img
@@ -35,7 +37,7 @@ export default function CallToAction({
             />
 
             {/* Dark overlay: text readable thakar jonno (light/dark dui mode e same) */}
-            <div className="absolute inset-0 -z-10 bg-black/60" />
+            <div className={`absolute inset-0 -z-10 ${isDark && 'bg-black/60'}`} />
 
             <div className="container-main section-padding">
                 <div className="mx-auto flex min-h-64 max-w-3xl flex-col items-center justify-center gap-4 text-center md:min-h-72 md:gap-5 xl:min-h-80">
