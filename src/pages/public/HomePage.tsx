@@ -4,6 +4,7 @@
 import Banner from "@/components/public/Banner";
 import CuratedTravel from "@/components/public/CuratedTravel";
 import HowItWorks from "@/components/public/HowItWorks";
+import PremiumBenefits from "@/components/public/PremiumBenefits";
 
 const HomePage = () => {
     return (
@@ -12,6 +13,7 @@ const HomePage = () => {
             <Banner/>
             <HowItWorks/>
             <CuratedTravel/>
+            <PremiumBenefits/>
             
         </div>
     );
