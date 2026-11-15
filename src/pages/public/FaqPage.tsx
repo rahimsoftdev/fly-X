@@ -1,9 +1,9 @@
 import FaqList from '@/components/public/FaqList';
 import CallToAction from '@/components/shared/CallToAction';
+import PageHero from '@/components/public/PageHero';
 
 // images: 
 import homeCallActionImg from '@/assets/images/homeCallActionImg.png'
-import PageHero from '@/components/public/PageHero';
 import faqHeroImg from '@/assets/images/hero2.png'
 
 

@@ -1,9 +1,15 @@
-
+import contactHeroImg from '@/assets/images/hero3.png'
+import PageHero from '@/components/public/PageHero';
 
 const ContactPage = () => {
     return (
         <div>
-            <h1>this si contact page</h1>
+            <PageHero
+                image={contactHeroImg}
+                imageAlt="Private jet flying above the clouds"
+                heading="Frequently Asked Questions"
+                description="Find answers to common questions about membership, travel safety, and billing."
+            />
         </div>
     );
 };
