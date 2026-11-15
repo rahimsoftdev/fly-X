@@ -1,14 +1,17 @@
+
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
 
 @import "tailwindcss";
+
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* ==============================
+   Theme Configuration
+================================= */
 
 @theme {
   --color-primary: #257AFC;
   --color-secondary: #10336A;
-
-
-  --color-heading-text: #101828;
 
   --container-main: 1300px;
   --spacing-section: 80px;
@@ -16,29 +19,61 @@
   --font-inter: "Inter", sans-serif;
 }
 
+/* ==============================
+   Light Theme
+================================= */
+
 :root {
+  color-scheme: light;
+
   --background: #ffffff;
   --foreground: #101828;
   --card: #f9fafb;
   --border-color: #e5e7eb;
+
+  --heading-text: #101828;
+  --paragraph-text: #475467;
 }
 
+/* ==============================
+   Dark Theme
+================================= */
+
 .dark {
+  color-scheme: dark;
+
   --background: #101828;
   --foreground: #f9fafb;
   --card: #1e293b;
   --border-color: #334155;
+
+  --heading-text: #f9fafb;
+  --paragraph-text: #cbd5e1;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-}
+/* ==============================
+   Global Styles
+================================= */
 
 * {
   font-family: var(--font-inter);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* ==============================
+   Custom Container
+================================= */
 
 @utility container-main {
   width: 100%;
@@ -55,12 +90,35 @@ body {
   }
 }
 
-@utility title-text {
-  font-size: 21px;
-  color: var(--color-heading-text);
+/* ==============================
+   Section Padding
+================================= */
+
+@utility section-padding {
+  padding-block: 2.5rem;
 
   @variant md {
-    font-size:30px;
+    padding-block: 3rem;
+  }
+
+  @variant xl {
+    padding-block: var(--spacing-section);
+  }
+}
+
+/* ==============================
+   Heading Typography
+================================= */
+
+@utility title-text {
+  color: var(--heading-text);
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+
+  @variant md {
+    font-size: 30px;
   }
 
   @variant xl {
@@ -68,6 +126,16 @@ body {
   }
 }
 
-html {
-  scroll-behavior: smooth;
+/* ==============================
+   Paragraph Typography
+================================= */
+
+@utility description-text {
+  color: var(--paragraph-text);
+  font-size: 14px;
+  line-height: 1.7;
+
+  @variant md {
+    font-size: 16px;
+  }
 }

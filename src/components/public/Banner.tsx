@@ -1,65 +1,77 @@
+
 import heroImage from "@/assets/images/hero.png";
 
 const Banner = () => {
   return (
-    <section className="w-full py-5 md:py-8">
+    <section className="w-full pt-5 md:pt-8">
       <div className="container-main">
-        {/* মেইন ইমেজ ও কাটআউট র‍্যাপার */}
         <div className="relative w-full">
-          {/* ব্যাকগ্রাউন্ড ইমেজ কন্টেইনার (উচ্চতা কমানো হয়েছে) */}
-          <div className="relative w-full h-[260px] sm:h-[320px] md:h-[400px] lg:h-[450px] xl:h-[480px] rounded-2xl md:rounded-3xl overflow-hidden bg-slate-200 dark:bg-slate-800">
+          {/* Hero Image */}
+          <div className="relative h-[260px] w-full overflow-hidden rounded-2xl bg-slate-200 dark:bg-slate-800 sm:h-[320px] md:h-[400px] lg:h-[450px] xl:h-[480px] md:rounded-3xl">
             <img
               src={heroImage}
               alt="Private Jet Flying Above Clouds"
-              className="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-105"
+              className="h-full w-full object-cover object-center transition-transform duration-700 hover:scale-105"
             />
-            {/* ছবির ওপর হালকা গ্রেডিয়েন্ট */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent pointer-events-none" />
+
+            {/* Image Overlay */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent" />
           </div>
 
-          {/* বাম-নিচের ইনভার্টেড কাটআউট কন্টেন্ট বক্স (Tablet, Laptop, Desktop) */}
+          {/* Hero Content */}
           <div
             className="
-              relative md:absolute md:bottom-0 md:left-0 z-10
-              w-full md:w-[56%] lg:w-[50%] xl:w-[46%]
+              relative z-10 w-full
               bg-[var(--background)]
-              pt-5 md:pt-7 lg:pt-8
-              pr-0 md:pr-8 lg:pr-10
-              pb-1 md:pb-3
-              md:rounded-tr-[28px]
+              pt-5 pb-1
+              md:absolute md:bottom-0 md:left-0
+              md:w-[56%] md:rounded-tr-[28px]
+              md:pt-7 md:pr-8 md:pb-3
+              lg:w-[50%] lg:pt-8 lg:pr-10
+              xl:w-[46%]
             "
           >
-            {/* উপরের বাম দিকের ইনভার্টেড কার্ভ */}
+            {/* Top Inverted Curve */}
             <span
               aria-hidden="true"
-              className="hidden md:block absolute -top-[24px] left-0 w-[24px] h-[24px] inverted-curve-top pointer-events-none"
+              className="inverted-curve-top pointer-events-none absolute -top-6 left-0 hidden size-6 md:block"
             />
 
-            {/* ডান-নিচের ইনভার্টেড কার্ভ */}
+            {/* Right Inverted Curve */}
             <span
               aria-hidden="true"
-              className="hidden md:block absolute bottom-0 -right-[24px] w-[24px] h-[24px] inverted-curve-right pointer-events-none"
+              className="inverted-curve-right pointer-events-none absolute -right-6 bottom-0 hidden size-6 md:block"
             />
 
-            {/* টেক্সট এবং বাটন কন্টেন্ট */}
+            {/* Content */}
             <div>
-              <h1
-                className="title-text xl:text-5xl font-bold"
-                
-              >
-                Private Travel <br />
+              <h1 className="title-text">
+                Private Travel
+                <br />
                 Reimagined
               </h1>
 
-              <p className="mt-2.5 sm:mt-3 text-sm sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed">
+              <p className="description-text mt-2.5 sm:mt-3">
                 Join an exclusive network that transforms travel demand into
                 shared private charter opportunities.
               </p>
 
+              {/* CTA Button */}
               <div className="mt-4 sm:mt-5">
                 <button
                   type="button"
-                  className="inline-flex items-center justify-center rounded-full bg-primary px-4 py-1.5 sm:px-5 sm:py-2 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-primary/90 hover:shadow-md active:scale-95 cursor-pointer"
+                  className="
+                    inline-flex items-center justify-center
+                    rounded-full bg-primary
+                    px-4 py-1.5
+                    text-sm font-semibold text-white
+                    shadow-sm
+                    transition-all duration-200
+                    hover:bg-primary/90 hover:shadow-md
+                    active:scale-95
+                    cursor-pointer
+                    sm:px-5 sm:py-2
+                  "
                 >
                   Become a Member
                 </button>
