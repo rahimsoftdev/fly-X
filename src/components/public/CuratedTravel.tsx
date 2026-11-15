@@ -13,7 +13,7 @@ export default function CuratedTravel() {
           <div className="space-y-4  lg:col-span-2 lg:space-y-5 lg:text-left">
             <h2 className="title-text font-playfair">Curated Travel</h2>
 
-            <p className="description-text mx-auto max-w-lg lg:mx-0">
+            <p className="description-text max-w-lg ">
               Do you travel between NYC and Tampa? Join other members and
               experience the luxury of a shared private jet.
             </p>

@@ -52,7 +52,7 @@ export default function FeatureRow({
           </span>
         </h2>
 
-        <p className="description-text mx-auto max-w-xl lg:mx-0">
+        <p className="description-text  max-w-xl ">
           {description}
         </p>
       </div>

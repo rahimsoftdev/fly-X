@@ -6,7 +6,7 @@ export default function FlightOperations() {
   return (
     <section
       id="flight-operations"
-      className="pt-10 md:pt-12 xl:pt-section bg-white transition-colors duration-300 dark:bg-[#0B1220]"
+      className=" bg-white transition-colors duration-300 dark:bg-[#0B1220]"
     >
       <div className="container-main">
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-12">
@@ -20,7 +20,7 @@ export default function FlightOperations() {
               Flight Operations &amp; Airports
             </h2>
 
-            <div className="mx-auto max-w-2xl space-y-4 lg:mx-0">
+            <div className=" max-w-2xl space-y-4 ">
               <p className="description-text">
                 Experience the pinnacle of executive travel between the
                 financial heartbeat of <span className={highlight}>New York</span>{" "}
