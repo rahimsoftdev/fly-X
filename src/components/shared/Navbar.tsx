@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router';
+import React, { useEffect, useState } from 'react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router';
 import { Menu, X, Sun, Moon, LogOut } from 'lucide-react';
-import useAuth from '@/hooks/useAuth';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { toggleTheme } from '@/store/slices/themeSlice';
+import { logout } from '@/utils/auth.util';
 
 const Navbar: React.FC = () => {
 
@@ -14,7 +14,18 @@ const Navbar: React.FC = () => {
     const theme = useAppSelector((state) => state.theme);
     const dispatch = useAppDispatch();
 
-    const { isAuthenticated, logout } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    //check login from localStorage (user exists = logged in):
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+        () => !!localStorage.getItem('raven_auth_user')
+    );
+
+    //re-check on every page change, so after login / register the buttons update:
+    useEffect(() => {
+        setIsAuthenticated(!!localStorage.getItem('raven_auth_user'));
+    }, [location.pathname]);
 
     //nav links:
     const navLinks = [
@@ -24,13 +35,12 @@ const Navbar: React.FC = () => {
         { name: 'Contact', path: '/contact' },
     ];
 
-
-    //TODO: Add real logout:
+    //real logout: remove user from localStorage, update buttons, go to home:
     const handleLogout = () => {
-        if (logout) {
-            logout();
-        }
+        logout();
+        setIsAuthenticated(false);
         setIsMobileMenuOpen(false);
+        navigate('/');
     };
 
     return (
