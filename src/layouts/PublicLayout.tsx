@@ -7,7 +7,6 @@ const PublicLayout = () => {
     return (
         <div>
             <Navbar />
-            <h1>This is Public Layout</h1>
             <Outlet />
         </div>
     );

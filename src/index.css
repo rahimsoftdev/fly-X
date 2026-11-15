@@ -35,7 +35,7 @@ body {
   color: var(--foreground);
 }
 
-i * {
+* {
   font-family: var(--font-inter);
 }
 
@@ -56,15 +56,15 @@ i * {
 }
 
 @utility title-text {
-  font-size: 16px;
+  font-size: 21px;
   color: var(--color-heading-text);
 
   @variant md {
-    font-size: 24px;
+    font-size:30px;
   }
 
   @variant xl {
-    font-size: 36px;
+    font-size: 40px;
   }
 }
 

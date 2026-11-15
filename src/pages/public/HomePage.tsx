@@ -1,16 +1,13 @@
 
 // import {Button} from '@heroui/react'
 
+import Banner from "@/components/public/Banner";
+
 const HomePage = () => {
     return (
-        <div className='bg-red-500 container-main'>
-            <h1 className='title-text text-white'>thsi is home apge</h1>
-
-            {/* <Button */}
-            {/* <Button>Click me</Button> */}
-            {/* <BUtton amak */}
-            {/* <Button >click me</Button> */}
+        <div className=''>
             
+            <Banner/>
             
         </div>
     );
