@@ -3,6 +3,8 @@ import AuthLayout from '@/layouts/AuthLayout'
 import PublicLayout from '@/layouts/PublicLayout'
 import StaffLayout from '@/layouts/StaffLayout'
 import UserLayout from '@/layouts/UserLayout'
+import LoginPage from '@/pages/auth/LoginPage'
+import RegisterPage from '@/pages/auth/RegisterPage'
 import ContactPage from '@/pages/public/ContactPage'
 import FaqPage from '@/pages/public/FaqPage'
 import HomePage from '@/pages/public/HomePage'
@@ -36,7 +38,15 @@ const router = createBrowserRouter([
 
     //auth page routes:
     {
-        path: "", Component: AuthLayout
+        path: "", Component: AuthLayout,
+        children:[
+            {
+                path:"login", Component:LoginPage
+            },
+            {
+                path:"register", Component:RegisterPage
+            },
+        ]
     },
 
     //admin dashboard page routes:
