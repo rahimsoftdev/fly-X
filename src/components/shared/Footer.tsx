@@ -65,7 +65,7 @@ export default function Footer() {
                         <Link
                             to="/"
                             className="flex flex-col  group focus:outline-none"
-                            
+
                         >
                             <svg
                                 width="38"
@@ -97,8 +97,8 @@ export default function Footer() {
                         <ul className="flex items-center gap-4">
                             {socials.map(({ label, href, icon: Icon }) => (
                                 <li key={label}>
-                                    <a
-                                        href={href}
+                                    <Link
+                                        to={href}
                                         aria-label={label}
                                         target="_blank"
                                         rel="noopener noreferrer"
@@ -106,7 +106,7 @@ export default function Footer() {
                                transition-all duration-300 hover:bg-primary hover:text-white"
                                     >
                                         <Icon />
-                                    </a>
+                                    </Link>
                                 </li>
                             ))}
                         </ul>

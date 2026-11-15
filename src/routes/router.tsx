@@ -4,6 +4,7 @@ import PublicLayout from '@/layouts/PublicLayout'
 import StaffLayout from '@/layouts/StaffLayout'
 import UserLayout from '@/layouts/UserLayout'
 import ContactPage from '@/pages/public/ContactPage'
+import FaqPage from '@/pages/public/FaqPage'
 import HomePage from '@/pages/public/HomePage'
 import { createBrowserRouter } from 'react-router'
 
@@ -18,6 +19,8 @@ const router = createBrowserRouter([
             },
             {
                 path: "contact", Component: ContactPage
+            }, {
+                path: 'faq', Component: FaqPage
             }
         ]
     },

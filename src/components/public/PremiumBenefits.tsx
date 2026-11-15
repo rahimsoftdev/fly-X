@@ -42,7 +42,7 @@ export default function PremiumBenefits() {
     >
       <div className="container-main">
         {/* Heading */}
-        <div className="mb-6 space-y-2 md:mb-8">
+        <div className="mb-3 space-y-2 md:mb-5">
           <p className="text-xs font-medium uppercase tracking-widest text-[#14438B] dark:text-primary">
             Membership
           </p>
