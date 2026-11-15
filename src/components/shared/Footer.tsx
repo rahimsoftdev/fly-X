@@ -1,5 +1,4 @@
 import { Link } from "react-router";
-import logo from "@/assets/images/logo.png";
 
 /* lucide-react v1 e brand icon nai, tai inline SVG use korechi */
 const FacebookIcon = () => (

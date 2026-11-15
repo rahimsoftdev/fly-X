@@ -1,14 +1,13 @@
-
-// import {Button} from '@heroui/react'
-
 import Banner from "@/components/public/Banner";
 import CuratedTravel from "@/components/public/CuratedTravel";
 import HowItWorks from "@/components/public/HowItWorks";
 import PremiumBenefits from "@/components/public/PremiumBenefits";
 import PrivateAviation from "@/components/public/PrivateAviation";
-import homeCallActionImg from '@/assets/images/homeCallActionImg.png'
 import CallToAction from "@/components/shared/CallToAction";
 import FAQ from "@/components/public/FAQ";
+
+//images: 
+import homeCallActionImg from '@/assets/images/homeCallActionImg.png'
 
 const HomePage = () => {
     return (
