@@ -3,17 +3,24 @@ import CallToAction from '@/components/shared/CallToAction';
 
 // images: 
 import homeCallActionImg from '@/assets/images/homeCallActionImg.png'
+import PageHero from '@/components/public/PageHero';
+import faqHeroImg from '@/assets/images/hero2.png'
 
 
 const FaqPage = () => {
     return (
         <div>
 
-            <h1>faq page</h1>
+            <PageHero
+                image={faqHeroImg}
+                imageAlt="Private jet flying above the clouds"
+                heading="Frequently Asked Questions"
+                description="Find answers to common questions about membership, travel safety, and billing."
+            />
             <FaqList />
 
             <CallToAction
-             image={homeCallActionImg}
+                image={homeCallActionImg}
                 imageAlt="image"
                 buttonLink="/"
                 heading="Ready to Elevate Your Travel Experience?"
