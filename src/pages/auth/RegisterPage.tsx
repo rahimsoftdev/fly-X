@@ -7,7 +7,7 @@ import { register } from "@/utils/auth.util";
 
 const initialForm: RegisterPayload = {
   firstName: "", lastName: "", address: "", zipCode: "", city: "",
-  state: "", phone: "", email: "", password: "", confirmPassword: "",
+  state: "", phone: "", email: "", password: "", confirmPassword: "",userId:null
 };
 
 export default function RegisterPage() {
@@ -15,13 +15,15 @@ export default function RegisterPage() {
   const [form, setForm] = useState<RegisterPayload>(initialForm);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  // register er por kothay jabe (/user, /admin ba /staff):
+  const [redirectPath, setRedirectPath] = useState("/");
 
-  // After success, go to home page
+  // After success, go to dashboard (/role)
   useEffect(() => {
     if (!success) return;
-    const timer = setTimeout(() => navigate("/"), 1500);
+    const timer = setTimeout(() => navigate(redirectPath), 1500);
     return () => clearTimeout(timer);
-  }, [success, navigate]);
+  }, [success, redirectPath, navigate]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -45,6 +47,7 @@ export default function RegisterPage() {
       setError("This email is already registered.");
       return;
     }
+    setRedirectPath(`/${user.role}`);
     setSuccess(true);
   };
 
@@ -124,7 +127,7 @@ export default function RegisterPage() {
         {success && (
           <p role="status" className="flex items-center gap-2 rounded-md bg-green-500/10 px-3 py-2.5 text-sm font-medium text-green-600 dark:text-green-400">
             <CheckCircle2 className="size-4 shrink-0" aria-hidden="true" />
-            Registration successful! Redirecting to home...
+            Registration successful! Redirecting to dashboard...
           </p>
         )}
 

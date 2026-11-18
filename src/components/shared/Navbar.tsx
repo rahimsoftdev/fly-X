@@ -27,12 +27,19 @@ const Navbar: React.FC = () => {
         setIsAuthenticated(!!localStorage.getItem('raven_auth_user'));
     }, [location.pathname]);
 
+    const user = getCurrentUser()
+    console.log(user, 'ur')
+
     //nav links:
     const navLinks = [
         { name: 'Home', path: '/' },
         { name: 'Membership', path: '/membership' },
         { name: 'FAQ', path: '/faq' },
         { name: 'Contact', path: '/contact' },
+        //Dashboard link: shudhu login thakle show hobe, path hobe /user, /admin ba /staff:
+        ...(isAuthenticated && user?.role
+            ? [{ name: 'Dashboard', path: `/${user.role}` }]
+            : []),
     ];
 
     //real logout: remove user from localStorage, update buttons, go to home:
@@ -43,34 +50,31 @@ const Navbar: React.FC = () => {
         navigate('/');
     };
 
-    const user = getCurrentUser()
-    console.log(user, 'ur')
-
     return (
         <header className="sticky top-0 z-50 w-full border-b border-[var(--border-color)] bg-[var(--background)]/95 backdrop-blur-md transition-colors duration-300">
             <nav className="container-main flex h-20 items-center justify-between">
-                
+
                 {/* Left: Brand Logo (RAVEN) */}
-                <Link 
-                    to="/" 
+                <Link
+                    to="/"
                     className="flex flex-col items-center justify-center group focus:outline-none"
                     onClick={() => setIsMobileMenuOpen(false)}
                 >
-                    <svg 
-                        width="38" 
-                        height="30" 
-                        viewBox="0 0 44 34" 
-                        fill="none" 
+                    <svg
+                        width="38"
+                        height="30"
+                        viewBox="0 0 44 34"
+                        fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                         className="text-primary transition-transform duration-300 group-hover:scale-105"
                     >
-                        <path 
-                            d="M6 2H26C32.5 2 37 6 37 11.5C37 15.8 34.2 19.2 30 20.4L38 31H27.5L20.5 21H15L19 31H10L5 18H23.5C26.5 18 28.5 16.2 28.5 13.5C28.5 10.8 26.5 9 23.5 9H9L6 2Z" 
-                            fill="currentColor" 
+                        <path
+                            d="M6 2H26C32.5 2 37 6 37 11.5C37 15.8 34.2 19.2 30 20.4L38 31H27.5L20.5 21H15L19 31H10L5 18H23.5C26.5 18 28.5 16.2 28.5 13.5C28.5 10.8 26.5 9 23.5 9H9L6 2Z"
+                            fill="currentColor"
                         />
-                        <path 
-                            d="M2 11H16L14 14.5H4L2 11Z" 
-                            fill="currentColor" 
+                        <path
+                            d="M2 11H16L14 14.5H4L2 11Z"
+                            fill="currentColor"
                         />
                     </svg>
                     <span className="mt-1 text-[10px] font-extrabold tracking-[0.28em] text-secondary dark:text-white">
@@ -85,10 +89,9 @@ const Navbar: React.FC = () => {
                             <NavLink
                                 to={link.path}
                                 className={({ isActive }) =>
-                                    `px-4 py-2 rounded-lg text-[15px] font-medium transition-all duration-200 ${
-                                        isActive
-                                            ? 'bg-primary text-white shadow-sm'
-                                            : 'text-[var(--foreground)] hover:text-primary hover:bg-primary/10'
+                                    `px-4 py-2 rounded-lg text-[15px] font-medium transition-all duration-200 ${isActive
+                                        ? 'bg-primary text-white shadow-sm'
+                                        : 'text-[var(--foreground)] hover:text-primary hover:bg-primary/10'
                                     }`
                                 }
                             >
@@ -176,10 +179,9 @@ const Navbar: React.FC = () => {
                                     to={link.path}
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className={({ isActive }) =>
-                                        `block w-full px-4 py-2.5 rounded-lg text-base font-medium transition-colors ${
-                                            isActive
-                                                ? 'bg-primary text-white'
-                                                : 'text-[var(--foreground)] hover:bg-[var(--card)] hover:text-primary'
+                                        `block w-full px-4 py-2.5 rounded-lg text-base font-medium transition-colors ${isActive
+                                            ? 'bg-primary text-white'
+                                            : 'text-[var(--foreground)] hover:bg-[var(--card)] hover:text-primary'
                                         }`
                                     }
                                 >
