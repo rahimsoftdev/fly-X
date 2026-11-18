@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router';
 import { Menu, X, Sun, Moon, LogOut } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { toggleTheme } from '@/store/slices/themeSlice';
-import { logout } from '@/utils/auth.util';
+import { getCurrentUser, logout } from '@/utils/auth.util';
 
 const Navbar: React.FC = () => {
 
@@ -42,6 +42,9 @@ const Navbar: React.FC = () => {
         setIsMobileMenuOpen(false);
         navigate('/');
     };
+
+    const user = getCurrentUser()
+    console.log(user, 'ur')
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-[var(--border-color)] bg-[var(--background)]/95 backdrop-blur-md transition-colors duration-300">

@@ -8,17 +8,17 @@ const demoUsers: IUser[] = [
   {
     firstName: "Admin", lastName: "Raven", address: "100 Park Avenue",
     zipCode: "10017", city: "New York", state: "NY", phone: "+1 212 555 0100",
-    email: "admin1234@gmail.com", password: "admin1234", role: "admin",
+    email: "admin1234@gmail.com", password: "admin1234", role: "admin",userId:1
   },
   {
     firstName: "Sophia", lastName: "Reed", address: "55 Madison Avenue",
     zipCode: "10010", city: "New York", state: "NY", phone: "+1 212 555 0155",
-    email: "staff1234@gmail.com", password: "staff1234", role: "staff",
+    email: "staff1234@gmail.com", password: "staff1234", role: "staff",userId:2
   },
   {
     firstName: "Daniel", lastName: "Carter", address: "22 Bayshore Boulevard",
     zipCode: "33606", city: "Tampa", state: "FL", phone: "+1 813 555 0122",
-    email: "user1234@gmail.com", password: "user1234", role: "user",
+    email: "user1234@gmail.com", password: "user1234", role: "user",userId:3
   },
 ];
 
@@ -60,4 +60,17 @@ export const register = (data: RegisterPayload): IUser | null => {
 // Logout: remove logged in user
 export const logout = (): void => {
   localStorage.removeItem(AUTH_KEY);
+};
+
+// Get currently logged-in user
+export const getCurrentUser = (): IUser | null => {
+  try {
+    const user = localStorage.getItem(AUTH_KEY);
+
+    if (!user) return null;
+
+    return JSON.parse(user) as IUser;
+  } catch {
+    return null;
+  }
 };

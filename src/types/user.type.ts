@@ -11,6 +11,7 @@ export interface IUser {
   email: string;
   password: string;
   role: UserRole;
+  userId:number
 }
 
 export type RegisterPayload = Omit<IUser, "role"> & { confirmPassword: string };
