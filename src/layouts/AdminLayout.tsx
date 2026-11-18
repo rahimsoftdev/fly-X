@@ -1,6 +1,7 @@
+import DashboardSidebar from "@/components/shared/DashboardSidebar";
 import type { IUser } from "@/types/user.type";
 import { getCurrentUser } from "@/utils/auth.util";
-import { Navigate } from "react-router";
+import { Navigate, Outlet } from "react-router";
 
 
 const AdminLayout = () => {
@@ -11,8 +12,11 @@ const AdminLayout = () => {
         return <Navigate to="/login" replace />;
     }
     return (
-        <div>
-            <h1>this is admin layout</h1>
+        <div className="min-h-dvh lg:flex">
+            <DashboardSidebar />
+            <main className="min-w-0 flex-1 p-4">
+                <Outlet />
+            </main>
         </div>
     );
 };

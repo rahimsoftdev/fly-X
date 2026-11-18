@@ -17,7 +17,8 @@ export default function LoginPage() {
       setError("Invalid email or password.");
       return;
     }
-    navigate("/");
+
+    navigate(`/${user.role}`);
   };
 
   return (
