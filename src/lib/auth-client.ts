@@ -16,7 +16,6 @@ export const authClient = createAuthClient({
         city: { type: "string" },
         state: { type: "string" },
         phone: { type: "string" },
-
       },
     }),
   ],

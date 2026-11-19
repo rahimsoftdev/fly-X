@@ -25,9 +25,20 @@ export default function RegisterPage() {
   const [preview, setPreview] = useState("");
 
   // After success, go to dashboard (/role)
+  // useEffect(() => {
+  //   if (!success) return;
+  //   const timer = setTimeout(() => navigate(redirectPath), 1500);
+  //   return () => clearTimeout(timer);
+
+  // }, [success, redirectPath, navigate]);
+
+  // After success, go to dashboard (/role)
   useEffect(() => {
     if (!success) return;
-    const timer = setTimeout(() => navigate(redirectPath), 1500);
+    const timer = setTimeout(
+      () => navigate(redirectPath, { replace: true }),
+      1500,
+    );
     return () => clearTimeout(timer);
   }, [success, redirectPath, navigate]);
 

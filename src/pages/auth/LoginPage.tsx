@@ -20,8 +20,7 @@ export default function LoginPage() {
         setError(result.message);
         return;
       }
-      console.log('hocche to')
-      navigate(`/${result.role}`);
+      navigate(`/${result.role}`, { replace: true });
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
