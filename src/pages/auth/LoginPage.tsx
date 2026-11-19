@@ -8,17 +8,25 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+    setLoading(true);
 
-    const user = login(email, password);
-    if (!user) {
-      setError("Invalid email or password.");
-      return;
+    try {
+      const result = await login(email, password);
+      if (!result.ok) {
+        setError(result.message);
+        return;
+      }
+      console.log('hocche to')
+      navigate(`/${result.role}`);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    navigate(`/${user.role}`);
   };
 
   return (
@@ -60,10 +68,12 @@ export default function LoginPage() {
 
         <button
           type="submit"
+          disabled={loading}
           className="w-full cursor-pointer rounded-md bg-primary px-5 py-3 text-sm font-medium
-                     text-white transition-all duration-300 hover:bg-secondary active:scale-[0.99]"
+                     text-white transition-all duration-300 hover:bg-secondary active:scale-[0.99]
+                     disabled:cursor-not-allowed disabled:opacity-60"
         >
-          Next
+          {loading ? "Signing in..." : "Next"}
         </button>
       </form>
 

@@ -1,24 +1,37 @@
 import DashboardSidebar from "@/components/shared/DashboardSidebar";
-import type { IUser } from "@/types/user.type";
-import { getCurrentUser } from "@/utils/auth.util";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Navigate, Outlet } from "react-router";
 
-
 const AdminLayout = () => {
-    const user: IUser | null = getCurrentUser()
-    console.log(user)
+  const { user, role, isPending } = useCurrentUser();
 
-    if (user?.role !== 'admin') {
-        return <Navigate to="/login" replace />;
-    }
+  // session load hocche, ekhon redirect kora jabe na
+  if (isPending) {
     return (
-        <div className="min-h-dvh lg:flex">
-            <DashboardSidebar />
-            <main className="min-w-0 flex-1 p-4">
-                <Outlet />
-            </main>
-        </div>
+      <div className="flex min-h-dvh items-center justify-center text-sm text-(--paragraph-text)">
+        Loading...
+      </div>
     );
+  }
+
+  // login kora nai
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // login ache kintu admin na -> nijer dashboard e pathao
+  if (role !== "admin") {
+    return <Navigate to={`/${role}`} replace />;
+  }
+
+  return (
+    <div className="min-h-dvh lg:flex">
+      <DashboardSidebar />
+      <main className="min-w-0 flex-1 p-4">
+        <Outlet />
+      </main>
+    </div>
+  );
 };
 
 export default AdminLayout;

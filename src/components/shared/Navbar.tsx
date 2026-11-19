@@ -1,34 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { Link, NavLink, useLocation, useNavigate } from 'react-router';
+import React, { useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router';
 import { Menu, X, Sun, Moon, LogOut } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { toggleTheme } from '@/store/slices/themeSlice';
-import { getCurrentUser, logout } from '@/utils/auth.util';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { logout } from '@/utils/auth.util';
 
 const Navbar: React.FC = () => {
 
     //mobile device navbar open and close toggle state:
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    //get theme and dispatch from redux store: 
+    //get theme and dispatch from redux store:
     const theme = useAppSelector((state) => state.theme);
     const dispatch = useAppDispatch();
 
     const navigate = useNavigate();
-    const location = useLocation();
 
-    //check login from localStorage (user exists = logged in):
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-        () => !!localStorage.getItem('raven_auth_user')
-    );
-
-    //re-check on every page change, so after login / register the buttons update:
-    useEffect(() => {
-        setIsAuthenticated(!!localStorage.getItem('raven_auth_user'));
-    }, [location.pathname]);
-
-    const user = getCurrentUser()
-    console.log(user, 'ur')
+    //real session from better-auth (localStorage ar lage na):
+    const { user, role, isPending } = useCurrentUser();
+    const isAuthenticated = !!user;
 
     //nav links:
     const navLinks = [
@@ -37,17 +28,87 @@ const Navbar: React.FC = () => {
         { name: 'FAQ', path: '/faq' },
         { name: 'Contact', path: '/contact' },
         //Dashboard link: shudhu login thakle show hobe, path hobe /user, /admin ba /staff:
-        ...(isAuthenticated && user?.role
-            ? [{ name: 'Dashboard', path: `/${user.role}` }]
+        ...(isAuthenticated && role
+            ? [{ name: 'Dashboard', path: `/${role}` }]
             : []),
     ];
 
-    //real logout: remove user from localStorage, update buttons, go to home:
-    const handleLogout = () => {
-        logout();
-        setIsAuthenticated(false);
+    //real logout: better-auth session clear, then go to home:
+    const handleLogout = async () => {
+        await logout();
         setIsMobileMenuOpen(false);
         navigate('/');
+    };
+
+    //session load howar somoy Login/Logout button er jayga khali rakhi (flicker bondho):
+    const renderDesktopAuth = () => {
+        if (isPending) return <div className="h-10 w-28" aria-hidden="true" />;
+
+        if (isAuthenticated) {
+            return (
+                <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="inline-flex items-center gap-2 rounded-full bg-secondary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:opacity-90 active:scale-95 cursor-pointer"
+                >
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                </button>
+            );
+        }
+
+        return (
+            <>
+                <Link
+                    to="/register"
+                    className="rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary/90 active:scale-95"
+                >
+                    Become a Member
+                </Link>
+                <Link
+                    to="/login"
+                    className="rounded-full bg-secondary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-secondary/90 active:scale-95"
+                >
+                    Log In
+                </Link>
+            </>
+        );
+    };
+
+    const renderMobileAuth = () => {
+        if (isPending) return null;
+
+        if (isAuthenticated) {
+            return (
+                <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-secondary px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                >
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                </button>
+            );
+        }
+
+        return (
+            <>
+                <Link
+                    to="/register"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full text-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                >
+                    Become a Member
+                </Link>
+                <Link
+                    to="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full text-center rounded-full bg-secondary px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                >
+                    Log In
+                </Link>
+            </>
+        );
     };
 
     return (
@@ -116,31 +177,7 @@ const Navbar: React.FC = () => {
                         )}
                     </button>
 
-                    {isAuthenticated ? (
-                        <button
-                            type="button"
-                            onClick={handleLogout}
-                            className="inline-flex items-center gap-2 rounded-full bg-secondary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:opacity-90 active:scale-95 cursor-pointer"
-                        >
-                            <LogOut className="w-4 h-4" />
-                            Logout
-                        </button>
-                    ) : (
-                        <>
-                            <Link
-                                to="/register"
-                                className="rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary/90 active:scale-95"
-                            >
-                                Become a Member
-                            </Link>
-                            <Link
-                                to="/login"
-                                className="rounded-full bg-secondary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-secondary/90 active:scale-95"
-                            >
-                                Log In
-                            </Link>
-                        </>
-                    )}
+                    {renderDesktopAuth()}
                 </div>
 
                 {/* Mobile & Tablet Controls */}
@@ -193,33 +230,7 @@ const Navbar: React.FC = () => {
 
                     {/* Mobile Auth Buttons */}
                     <div className="mt-5 pt-4 border-t border-[var(--border-color)] flex flex-col sm:flex-row gap-3">
-                        {isAuthenticated ? (
-                            <button
-                                type="button"
-                                onClick={handleLogout}
-                                className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-secondary px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                            >
-                                <LogOut className="w-4 h-4" />
-                                Logout
-                            </button>
-                        ) : (
-                            <>
-                                <Link
-                                    to="/register"
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="w-full text-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                                >
-                                    Become a Member
-                                </Link>
-                                <Link
-                                    to="/login"
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="w-full text-center rounded-full bg-secondary px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                                >
-                                    Log In
-                                </Link>
-                            </>
-                        )}
+                        {renderMobileAuth()}
                     </div>
                 </div>
             )}

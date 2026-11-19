@@ -3,10 +3,17 @@ import { Link, NavLink, useNavigate } from 'react-router';
 import { LogOut, Menu, PanelLeftClose, PanelLeftOpen, X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { adminNavigation, staffNavigation, userNavigation } from '@/data/dashbaord.data';
-import type { IUser } from '@/types/user.type';
-import { getCurrentUser, logout } from '@/utils/auth.util';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { logout } from '@/utils/auth.util';
 
 type NavItem = { label: string; path: string; icon: LucideIcon };
+
+// sidebar e jei field gula lage
+type SidebarUser = {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+} | null;
 
 /* ---------- RAVEN Logo ---------- */
 const Logo = ({
@@ -46,9 +53,9 @@ const Logo = ({
 );
 
 /* ---------- Avatar (image ba name er prothom okkhor) ---------- */
-const Avatar = ({ user }: { user: IUser | null }) => {
+const Avatar = ({ user }: { user: SidebarUser }) => {
     const name = user?.name ?? 'User';
-    const image = (user as { image?: string } | null)?.image;
+    const image = user?.image;
 
     if (image) {
         return (
@@ -69,7 +76,7 @@ const Avatar = ({ user }: { user: IUser | null }) => {
 /* ---------- Sidebar er vitorer content (mobile + desktop dutoi use kore) ---------- */
 type ContentProps = {
     links: NavItem[];
-    user: IUser | null;
+    user: SidebarUser;
     collapsed: boolean;
     onNavigate: () => void;
     onLogout: () => void;
@@ -179,18 +186,18 @@ const SidebarContent = ({
 /* ---------- Main Component ---------- */
 const DashboardSidebar = () => {
     const navigate = useNavigate();
-    const currentUser: IUser | null = getCurrentUser();
+    const { user: currentUser, role } = useCurrentUser();
 
     const [mobileOpen, setMobileOpen] = useState(false); // choto device drawer
     const [collapsed, setCollapsed] = useState(false); // boro device icon-only mode
 
     // link role onujayi
     const links: NavItem[] =
-        currentUser?.role === 'admin'
+        role === 'admin'
             ? adminNavigation
-            : currentUser?.role === 'staff'
+            : role === 'staff'
                 ? staffNavigation
-                : currentUser?.role === 'user'
+                : role === 'user'
                     ? userNavigation
                     : [];
 
@@ -211,10 +218,10 @@ const DashboardSidebar = () => {
         };
     }, [mobileOpen]);
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        await logout(); // better-auth session clear
         setMobileOpen(false);
-        navigate('/login'); // tomar login route onujayi change koro
+        navigate('/login', { replace: true });
     };
 
     return (
