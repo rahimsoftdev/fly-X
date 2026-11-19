@@ -1,6 +1,7 @@
 import type { IUser, RegisterPayload } from "@/types/user.type";
+import { authClient } from "@/lib/auth-client";
 
-const USERS_KEY = "raven_users"; // registered users list
+const USERS_KEY = "raven_users"; // old local users list (login er jonno ekhono lage)
 const AUTH_KEY = "raven_auth_user"; // logged in user
 
 // 3 demo accounts, role is decided by email
@@ -8,17 +9,17 @@ const demoUsers: IUser[] = [
   {
     firstName: "Admin", lastName: "Raven", address: "100 Park Avenue",
     zipCode: "10017", city: "New York", state: "NY", phone: "+1 212 555 0100",
-    email: "admin1234@gmail.com", password: "admin1234", role: "admin",userId:1
+    email: "admin1234@gmail.com", password: "admin1234", role: "admin", userId: 1,
   },
   {
     firstName: "Sophia", lastName: "Reed", address: "55 Madison Avenue",
     zipCode: "10010", city: "New York", state: "NY", phone: "+1 212 555 0155",
-    email: "staff1234@gmail.com", password: "staff1234", role: "staff",userId:2
+    email: "staff1234@gmail.com", password: "staff1234", role: "staff", userId: 2,
   },
   {
     firstName: "Daniel", lastName: "Carter", address: "22 Bayshore Boulevard",
     zipCode: "33606", city: "Tampa", state: "FL", phone: "+1 813 555 0122",
-    email: "user1234@gmail.com", password: "user1234", role: "user",userId:3
+    email: "user1234@gmail.com", password: "user1234", role: "user", userId: 3,
   },
 ];
 
@@ -42,24 +43,43 @@ export const login = (email: string, password: string): IUser | null => {
   return found;
 };
 
-// Register: save info, role is always "user"
-export const register = (data: RegisterPayload): IUser | null => {
-  const email = data.email.trim().toLowerCase();
+export type RegisterResult =
+  | { ok: true; role: string }
+  | { ok: false; message: string };
 
-  // email already used
-  if ([...demoUsers, ...getUsers()].some((u) => u.email === email)) return null;
+// Register: backend er better-auth e user create kore
+export const register = async (
+  data: RegisterPayload,
+): Promise<RegisterResult> => {
+  const { confirmPassword: _confirm, userId: _userId, ...rest } = data;
+  const email = rest.email.trim().toLowerCase();
 
-  const { confirmPassword: _confirm, ...rest } = data;
-  const newUser: IUser = { ...rest, email, role: "user" };
+  const { data: res, error } = await authClient.signUp.email({
+    ...rest,
+    email,
+    name: `${rest.firstName} ${rest.lastName}`, // better-auth e name required
+  });
 
-  localStorage.setItem(USERS_KEY, JSON.stringify([...getUsers(), newUser]));
-  localStorage.setItem(AUTH_KEY, JSON.stringify(newUser));
-  return newUser;
+  if (error || !res) {
+    return { ok: false, message: error?.message || "Registration failed." };
+  }
+
+  const role = (res.user as { role?: string }).role ?? "user";
+
+  // Dashboard guard ekhono getCurrentUser() (localStorage) use kore,
+  // tai logged in user ta ekhane rekhe dilam. Password rakha hocche na.
+  localStorage.setItem(
+    AUTH_KEY,
+    JSON.stringify({ ...rest, email, password: "", role }),
+  );
+
+  return { ok: true, role };
 };
 
 // Logout: remove logged in user
 export const logout = (): void => {
   localStorage.removeItem(AUTH_KEY);
+  void authClient.signOut(); // better-auth session o clear hobe
 };
 
 // Get currently logged-in user

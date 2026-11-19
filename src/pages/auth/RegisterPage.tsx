@@ -1,13 +1,14 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router";
-import { CheckCircle2, CreditCard, Lock } from "lucide-react";
+import { CheckCircle2, CreditCard, ImagePlus, Lock } from "lucide-react";
 import FormField from "@/components/ui/FormField";
 import type { RegisterPayload } from "@/types/user.type";
 import { register } from "@/utils/auth.util";
+import { uploadImage } from "@/utils/image.util";
 
 const initialForm: RegisterPayload = {
   firstName: "", lastName: "", address: "", zipCode: "", city: "",
-  state: "", phone: "", email: "", password: "", confirmPassword: "",userId:null
+  state: "", phone: "", email: "", password: "", confirmPassword: "", userId: null,
 };
 
 export default function RegisterPage() {
@@ -15,8 +16,13 @@ export default function RegisterPage() {
   const [form, setForm] = useState<RegisterPayload>(initialForm);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   // register er por kothay jabe (/user, /admin ba /staff):
   const [redirectPath, setRedirectPath] = useState("/");
+
+  // image upload
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState("");
 
   // After success, go to dashboard (/role)
   useEffect(() => {
@@ -25,12 +31,37 @@ export default function RegisterPage() {
     return () => clearTimeout(timer);
   }, [success, redirectPath, navigate]);
 
+  // preview url cleanup
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     setError("");
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setError("Please select an image file.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Image must be under 5MB.");
+      return;
+    }
+
+    setError("");
+    setImageFile(file);
+    setPreview(URL.createObjectURL(file));
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
     if (form.password.length < 6) {
@@ -42,13 +73,25 @@ export default function RegisterPage() {
       return;
     }
 
-    const user = register(form);
-    if (!user) {
-      setError("This email is already registered.");
-      return;
+    setLoading(true);
+    try {
+      // 1. image imgbb te upload, url ashbe
+      const image = imageFile ? await uploadImage(imageFile) : undefined;
+
+      // 2. sob data + image url diye register (better-auth)
+      const result = await register({ ...form, image });
+      if (!result.ok) {
+        setError(result.message);
+        return;
+      }
+
+      setRedirectPath(`/${result.role}`);
+      setSuccess(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setLoading(false);
     }
-    setRedirectPath(`/${user.role}`);
-    setSuccess(true);
   };
 
   return (
@@ -96,6 +139,35 @@ export default function RegisterPage() {
         <FormField id="confirmPassword" name="confirmPassword" type="password" label="Confirm Password" required
           placeholder="Confirm password" value={form.confirmPassword} onChange={handleChange} />
 
+        {/* Profile photo upload */}
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-(--heading-text)">
+            Profile Photo <span className="text-(--paragraph-text)">(optional)</span>
+          </p>
+          <label
+            htmlFor="image"
+            className="flex cursor-pointer items-center gap-4 rounded-xl border border-dashed border-(--border-color) p-4 transition-colors hover:border-primary"
+          >
+            {preview ? (
+              <img src={preview} alt="Preview" className="size-16 rounded-full object-cover" />
+            ) : (
+              <span className="flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <ImagePlus className="size-6" aria-hidden="true" />
+              </span>
+            )}
+            <span className="text-xs text-(--paragraph-text)">
+              {imageFile ? imageFile.name : "Click to upload (JPG, PNG, max 5MB)"}
+            </span>
+          </label>
+          <input
+            id="image"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+          />
+        </div>
+
         {/* Registration fee card */}
         <div className="flex items-center justify-between gap-4 rounded-xl border border-(--border-color) bg-white p-4 dark:bg-(--card) md:p-5">
           <div className="flex items-center gap-3">
@@ -133,12 +205,16 @@ export default function RegisterPage() {
 
         <button
           type="submit"
-          disabled={success}
+          disabled={success || loading}
           className="w-full cursor-pointer rounded-md bg-primary px-5 py-3 text-sm font-medium text-white
                      transition-all duration-300 hover:bg-secondary active:scale-[0.99]
                      disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {success ? "Redirecting..." : "Continue to Payment"}
+          {success
+            ? "Redirecting..."
+            : loading
+              ? "Creating account..."
+              : "Continue to Payment"}
         </button>
       </form>
     </div>
