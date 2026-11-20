@@ -11,6 +11,9 @@ import HomePage from '@/pages/public/HomePage'
 import MembershipPage from '@/pages/public/MembershipPage'
 import TermsAndConditionsPage from '@/pages/public/TermsAndConditions'
 import OpportunitiesPage from '@/pages/users/OpportunitiesPage'
+import PendingReservationsPage from '@/pages/users/PendingReservationsPage'
+import TravelPreferencesPage from '@/pages/users/TravelPreferencesPage'
+import UpcomingTripsPage from '@/pages/users/UpcomingTripsPage'
 import { createBrowserRouter } from 'react-router'
 
 const router = createBrowserRouter([
@@ -64,7 +67,16 @@ const router = createBrowserRouter([
         children:[
             {
                 path:"travel-opportunities", Component: OpportunitiesPage
-            }
+            },
+            {
+                path:"pending-reservations", Component: PendingReservationsPage
+            },
+            {
+                path:"upcoming-trips", Component: UpcomingTripsPage
+            },
+            {
+                path:"travel-preferences", Component: TravelPreferencesPage
+            },
         ]
     },
 

@@ -109,7 +109,7 @@ const OpportunitiesPage = () => {
     <section className="mx-auto w-full">
       <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-heading text-2xl font-semibold text-(--heading-text) sm:text-3xl lg:text-4xl">
+          <h1 className="font-heading text-xl font-semibold text-(--heading-text) sm:text-2xl lg:text-3xl">
             Available Opportunities
           </h1>
           <p className="mt-1 text-sm text-(--paragraph-text)">
