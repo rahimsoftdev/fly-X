@@ -10,6 +10,7 @@ import FaqPage from '@/pages/public/FaqPage'
 import HomePage from '@/pages/public/HomePage'
 import MembershipPage from '@/pages/public/MembershipPage'
 import TermsAndConditionsPage from '@/pages/public/TermsAndConditions'
+import NewTravelRequestPage from '@/pages/users/NewTravelRequestPage'
 import OpportunitiesPage from '@/pages/users/OpportunitiesPage'
 import PendingReservationsPage from '@/pages/users/PendingReservationsPage'
 import TravelPreferencesPage from '@/pages/users/TravelPreferencesPage'
@@ -76,6 +77,9 @@ const router = createBrowserRouter([
             },
             {
                 path:"travel-preferences", Component: TravelPreferencesPage
+            },
+            {
+                path:"custom-travel", Component: NewTravelRequestPage
             },
         ]
     },
