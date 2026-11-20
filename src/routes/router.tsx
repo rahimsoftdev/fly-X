@@ -10,6 +10,7 @@ import FaqPage from '@/pages/public/FaqPage'
 import HomePage from '@/pages/public/HomePage'
 import MembershipPage from '@/pages/public/MembershipPage'
 import TermsAndConditionsPage from '@/pages/public/TermsAndConditions'
+import OpportunitiesPage from '@/pages/users/OpportunitiesPage'
 import { createBrowserRouter } from 'react-router'
 
 const router = createBrowserRouter([
@@ -59,7 +60,12 @@ const router = createBrowserRouter([
     //user dashboard page routes:
     {
         path: 'user',
-        Component: UserLayout
+        Component: UserLayout,
+        children:[
+            {
+                path:"travel-opportunities", Component: OpportunitiesPage
+            }
+        ]
     },
 
 
