@@ -5,8 +5,15 @@ import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { toggleTheme } from '@/store/slices/themeSlice';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { logout } from '@/utils/auth.util';
+// import { getTokenData } from '@/utils/get.token.util';
+
 
 const Navbar: React.FC = () => {
+
+    // const token = getTokenData()
+    // console.log(token)
+
+
 
     //mobile device navbar open and close toggle state:
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
