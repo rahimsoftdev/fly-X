@@ -18,6 +18,7 @@ import NewOpportunityPage from '@/pages/staff/NewOpportunityPage'
 import OpportunitiesManagementPage from '@/pages/staff/OpportunitiesManagementPage'
 import OpportunityDetailsPage from '@/pages/staff/OpportunityDetailsPage'
 import StaffOverviewPage from '@/pages/staff/StaffOverviewPage'
+import TravelManagementPage from '@/pages/staff/TravelManagementPage'
 // import MemberInterestDetailsPage from '@/pages/staff/MembersInterestPage'
 import MyCustomTravelsPage from '@/pages/users/MyCustomTravelsPage'
 import NewTravelRequestPage from '@/pages/users/NewTravelRequestPage'
@@ -126,6 +127,7 @@ const router = createBrowserRouter([
             { path: "opportunities", Component: OpportunitiesManagementPage },
             { path: "opportunities/new", Component: NewOpportunityPage },
             { path: "opportunities/:id", Component: OpportunityDetailsPage },
+            { path: "travel-preferences", Component: TravelManagementPage },
 
         ],
     },

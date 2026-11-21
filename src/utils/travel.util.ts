@@ -16,8 +16,8 @@ export const TIME_OPTIONS: { value: PreferredTime; label: string }[] = [
   { value: "evening", label: "Evening" },
 ];
 
-const capitalize = (value: string) =>
-  value.charAt(0).toUpperCase() + value.slice(1);
+// const capitalize = (value: string) =>
+//   value.charAt(0).toUpperCase() + value.slice(1);
 
 // "morning" -> "Morning"
 export const timeLabel = (value: string) => capitalize(value);
@@ -47,3 +47,25 @@ export const todayString = () => {
   const day = String(now.getDate()).padStart(2, "0");
   return `${now.getFullYear()}-${month}-${day}`;
 };
+
+
+import type { TravelStatus } from "@/types/travel.type";
+
+export const TRAVEL_STATUSES: TravelStatus[] = [
+  "interested",
+  "confirmed",
+  "canceled",
+];
+
+export const TRAVEL_STATUS_STYLES: Record<TravelStatus, string> = {
+  interested: "bg-gray-600 text-white dark:bg-gray-500",
+  confirmed:
+    "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-300",
+  canceled: "bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-300",
+};
+
+export const capitalize = (value?: string) =>
+  value ? value.charAt(0).toUpperCase() + value.slice(1) : "-";
+
+export const formatTravelRoute = (origin: string, destination: string) =>
+  `${origin} → ${destination}`;
