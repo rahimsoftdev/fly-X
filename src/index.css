@@ -139,3 +139,22 @@ body {
     font-size: 16px;
   }
 }
+
+
+@keyframes modal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-pop {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+@utility animate-modal-fade {
+  animation: modal-fade 0.15s ease-out;
+}
+
+@utility animate-modal-pop {
+  animation: modal-pop 0.2s ease-out;
+}

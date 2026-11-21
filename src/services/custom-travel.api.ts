@@ -15,3 +15,12 @@ export const createCustomTravel = async (payload: CreateCustomTravelPayload) => 
   );
   return res.data.data;
 };
+
+// nijer kora sob custom travel request (notun age)
+export const getMyCustomTravels = async (signal?: AbortSignal) => {
+  const res = await api.get<{ success: boolean; data: ICustomTravel[] }>(
+    `${BASE}/me`,
+    { signal }
+  );
+  return res.data.data;
+};

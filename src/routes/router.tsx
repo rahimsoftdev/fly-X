@@ -10,6 +10,13 @@ import FaqPage from '@/pages/public/FaqPage'
 import HomePage from '@/pages/public/HomePage'
 import MembershipPage from '@/pages/public/MembershipPage'
 import TermsAndConditionsPage from '@/pages/public/TermsAndConditions'
+import CustomTravelCalendarPage from '@/pages/staff/CustomTravelCalendarPage'
+import CustomTravelDayPage from '@/pages/staff/CustomTravelDayPage'
+import MemberInterestDetailsPage from '@/pages/staff/MemberInterestDetailsPage'
+import MembersInterestPage from '@/pages/staff/MembersInterestPage'
+import StaffOverviewPage from '@/pages/staff/StaffOverviewPage'
+// import MemberInterestDetailsPage from '@/pages/staff/MembersInterestPage'
+import MyCustomTravelsPage from '@/pages/users/MyCustomTravelsPage'
 import NewTravelRequestPage from '@/pages/users/NewTravelRequestPage'
 import OpportunitiesPage from '@/pages/users/OpportunitiesPage'
 import PendingReservationsPage from '@/pages/users/PendingReservationsPage'
@@ -44,12 +51,12 @@ const router = createBrowserRouter([
     //auth page routes:
     {
         path: "", Component: AuthLayout,
-        children:[
+        children: [
             {
-                path:"login", Component:LoginPage
+                path: "login", Component: LoginPage
             },
             {
-                path:"register", Component:RegisterPage
+                path: "register", Component: RegisterPage
             },
         ]
     },
@@ -65,21 +72,24 @@ const router = createBrowserRouter([
     {
         path: 'user',
         Component: UserLayout,
-        children:[
+        children: [
             {
-                path:"travel-opportunities", Component: OpportunitiesPage
+                path: "travel-opportunities", Component: OpportunitiesPage
             },
             {
-                path:"pending-reservations", Component: PendingReservationsPage
+                path: "pending-reservations", Component: PendingReservationsPage
             },
             {
-                path:"upcoming-trips", Component: UpcomingTripsPage
+                path: "upcoming-trips", Component: UpcomingTripsPage
             },
             {
-                path:"travel-preferences", Component: TravelPreferencesPage
+                path: "travel-preferences", Component: TravelPreferencesPage
             },
             {
-                path:"custom-travel", Component: NewTravelRequestPage
+                path: "custom-travel", Component: NewTravelRequestPage
+            },
+            {
+                path: "my-custom-travels", Component: MyCustomTravelsPage
             },
         ]
     },
@@ -88,7 +98,30 @@ const router = createBrowserRouter([
     //staff dashboard page routes:
     {
         path: 'staff',
-        Component: StaffLayout
+        Component: StaffLayout,
+        children: [
+            {
+                index: true, Component: StaffOverviewPage
+            },
+            {
+                path: "members-interest",
+                Component: MembersInterestPage,
+            },
+            {
+                path: "members-interest/:id",
+                Component: MemberInterestDetailsPage,
+            },
+            {
+                path: "calendar-demand",
+                Component: CustomTravelCalendarPage,
+            },
+            {
+                path: "calendar-demand/:date",
+                // Component: CustomTravelCalendarPage,
+                Component: CustomTravelDayPage
+            },
+
+        ],
     },
 
 

@@ -44,7 +44,7 @@ export const userNavigation = [
     },
     {
         label: "Custom Travel",
-        path: "/user/custom-travel",
+        path: "/user/my-custom-travels",
         icon: Plus,
     },
     {
