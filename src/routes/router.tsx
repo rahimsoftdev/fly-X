@@ -14,6 +14,9 @@ import CustomTravelCalendarPage from '@/pages/staff/CustomTravelCalendarPage'
 import CustomTravelDayPage from '@/pages/staff/CustomTravelDayPage'
 import MemberInterestDetailsPage from '@/pages/staff/MemberInterestDetailsPage'
 import MembersInterestPage from '@/pages/staff/MembersInterestPage'
+import NewOpportunityPage from '@/pages/staff/NewOpportunityPage'
+import OpportunitiesManagementPage from '@/pages/staff/OpportunitiesManagementPage'
+import OpportunityDetailsPage from '@/pages/staff/OpportunityDetailsPage'
 import StaffOverviewPage from '@/pages/staff/StaffOverviewPage'
 // import MemberInterestDetailsPage from '@/pages/staff/MembersInterestPage'
 import MyCustomTravelsPage from '@/pages/users/MyCustomTravelsPage'
@@ -120,6 +123,9 @@ const router = createBrowserRouter([
                 // Component: CustomTravelCalendarPage,
                 Component: CustomTravelDayPage
             },
+            { path: "opportunities", Component: OpportunitiesManagementPage },
+            { path: "opportunities/new", Component: NewOpportunityPage },
+            { path: "opportunities/:id", Component: OpportunityDetailsPage },
 
         ],
     },
