@@ -3,6 +3,7 @@ import AuthLayout from '@/layouts/AuthLayout'
 import PublicLayout from '@/layouts/PublicLayout'
 import StaffLayout from '@/layouts/StaffLayout'
 import UserLayout from '@/layouts/UserLayout'
+import AdminOverviewPage from '@/pages/admin/AdminOverviewPage'
 import LoginPage from '@/pages/auth/LoginPage'
 import RegisterPage from '@/pages/auth/RegisterPage'
 import ContactPage from '@/pages/public/ContactPage'
@@ -68,7 +69,12 @@ const router = createBrowserRouter([
     //admin dashboard page routes:
     {
         path: 'admin',
-        Component: AdminLayout
+        Component: AdminLayout,
+        children:[
+            {
+                index:true, Component:AdminOverviewPage
+            }
+        ]
     },
 
 
