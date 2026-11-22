@@ -49,7 +49,7 @@ export default function AnalyticsPage() {
     })) ?? [];
 
   return (
-    <div className="space-y-5 p-6">
+    <div className="space-y-5  mb-10 md:mb-12 xl:mb-section">
       <header>
         <h1 className="font-serif text-2xl font-semibold text-gray-900 dark:text-gray-50">
           Analytics &amp; Insights

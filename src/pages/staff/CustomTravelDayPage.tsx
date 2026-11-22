@@ -33,7 +33,7 @@ const CustomTravelDayPage = () => {
     : CALENDAR_PATH;
 
   return (
-    <div className="container-main section-padding">
+    <div className=" ">
       <Link
         to={backTo}
         className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-(--paragraph-text) hover:text-(--heading-text)"

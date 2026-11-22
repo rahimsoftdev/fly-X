@@ -42,18 +42,21 @@ const CustomTravelCalendarPage = () => {
   };
 
   return (
-    <div className="container-main section-padding">
+    <div className="">
       {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
 
-      <DemandCalendar
-        year={year}
-        month={month}
-        daysByDate={daysByDate}
-        isLoading={isLoading}
-        onPrev={() => changeMonth(-1)}
-        onNext={() => changeMonth(1)}
-        onSelectDate={(dateKey) => navigate(`${CALENDAR_PATH}/${dateKey}`)}
-      />
+      <div className="">
+        <DemandCalendar
+
+          year={year}
+          month={month}
+          daysByDate={daysByDate}
+          isLoading={isLoading}
+          onPrev={() => changeMonth(-1)}
+          onNext={() => changeMonth(1)}
+          onSelectDate={(dateKey) => navigate(`${CALENDAR_PATH}/${dateKey}`)}
+        />
+      </div>
     </div>
   );
 };

@@ -151,6 +151,13 @@ const router = createBrowserRouter([
             { path: "opportunities/:id", Component: OpportunityDetailsPage },
             { path: "travel-preferences", Component: TravelManagementPage },
 
+            {
+                path:'message', Component:InboxPage
+            },
+            {
+                path:'profile', Component:ProfileSettingsPage
+            }
+
         ],
     },
 

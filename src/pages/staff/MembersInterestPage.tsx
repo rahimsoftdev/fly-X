@@ -338,7 +338,7 @@ const MembersInterestPage = () => {
   ];
 
   return (
-    <div className="mx-auto w-full max-w-350 p-4 sm:p-5 lg:p-6">
+    <div className="mx-auto w-full  ">
       {/* ---------- Header ---------- */}
       <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
