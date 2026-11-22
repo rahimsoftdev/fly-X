@@ -6,6 +6,9 @@ import UserLayout from '@/layouts/UserLayout'
 import AdminOverviewPage from '@/pages/admin/AdminOverviewPage'
 import LoginPage from '@/pages/auth/LoginPage'
 import RegisterPage from '@/pages/auth/RegisterPage'
+import InboxPage from '@/pages/InboxPage'
+import NotificationsPage from '@/pages/NotificationsPage'
+import ProfileSettingsPage from '@/pages/ProfileSettingsPage'
 import ContactPage from '@/pages/public/ContactPage'
 import FaqPage from '@/pages/public/FaqPage'
 import HomePage from '@/pages/public/HomePage'
@@ -20,6 +23,7 @@ import OpportunitiesManagementPage from '@/pages/staff/OpportunitiesManagementPa
 import OpportunityDetailsPage from '@/pages/staff/OpportunityDetailsPage'
 import StaffOverviewPage from '@/pages/staff/StaffOverviewPage'
 import TravelManagementPage from '@/pages/staff/TravelManagementPage'
+import DashboardPage from '@/pages/users/DashboardPage'
 // import MemberInterestDetailsPage from '@/pages/staff/MembersInterestPage'
 import MyCustomTravelsPage from '@/pages/users/MyCustomTravelsPage'
 import NewTravelRequestPage from '@/pages/users/NewTravelRequestPage'
@@ -84,6 +88,9 @@ const router = createBrowserRouter([
         Component: UserLayout,
         children: [
             {
+                index:true, Component:DashboardPage
+            },
+            {
                 path: "travel-opportunities", Component: OpportunitiesPage
             },
             {
@@ -100,6 +107,15 @@ const router = createBrowserRouter([
             },
             {
                 path: "my-custom-travels", Component: MyCustomTravelsPage
+            },
+            {
+                path: "message", Component: InboxPage
+            },
+            {
+                path: "notification", Component: NotificationsPage
+            },
+            {
+                path: "profile", Component: ProfileSettingsPage
             },
         ]
     },
