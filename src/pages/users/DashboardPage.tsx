@@ -14,7 +14,7 @@ import UpcomingTrips from "@/components/user/UpcomingTrips";
 // আপনার আসল route path অনুযায়ী বদলান
 const PREFERENCES_PATH = "/user/travel-preferences";
 const CUSTOM_REQUEST_PATH = "/user/custom-travel";
-const ALL_TRIPS_PATH = "/user/trips";
+const ALL_TRIPS_PATH = "/user/upcoming-trips";
 
 export default function DashboardPage() {
   const { data, loading, error, refetch } = useDashboard();
@@ -22,7 +22,7 @@ export default function DashboardPage() {
   const firstName = data?.user.name?.trim().split(" ")[0] || "there";
 
   return (
-    <div className="space-y-5 p-6">
+    <div className="space-y-5 ">
       <header>
         <h1 className="font-serif text-3xl font-medium text-gray-900 dark:text-gray-50">
           Welcome back, {firstName}
