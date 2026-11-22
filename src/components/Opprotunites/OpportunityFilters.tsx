@@ -17,7 +17,7 @@ const OpportunityFilters = ({
   type,
   onChange,
 }: OpportunityFiltersProps) => (
-  <div className="grid grid-cols-2 gap-3 sm:flex sm:w-auto">
+  <div className="grid grid-cols-2 gap-3 sm:flex sm:w-auto sticky top-0">
     <label className="flex flex-col gap-1 sm:w-40">
       <span className="text-xs font-medium text-(--paragraph-text)">Status</span>
       <select

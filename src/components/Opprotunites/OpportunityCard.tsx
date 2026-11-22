@@ -108,36 +108,37 @@ const OpportunityCard = ({ opportunity, onReserved }: OpportunityCardProps) => {
             toggle();
           }
         }}
-        className={`group cursor-pointer rounded-xl border bg-(--background) p-4 shadow-sm transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:p-5 ${
-          isOpen
+        className={`group w-full min-w-0 cursor-pointer rounded-xl border bg-(--background) p-3 shadow-sm transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary min-[400px]:p-4 sm:p-5 ${isOpen
             ? "border-primary shadow-md"
             : "border-(--border-color) hover:border-primary"
-        }`}
+          }`}
       >
         {/* উপরের অংশ: আইকন + রুট + ব্যাজ */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-3">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-(--card) text-(--heading-text)">
+        <div className="flex items-start justify-between gap-2 sm:gap-3">
+          <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-(--card) text-(--heading-text) sm:size-10">
               <Plane size={18} />
             </div>
             <div className="min-w-0">
-              <h3 className="truncate text-base font-semibold text-(--heading-text) sm:text-lg">
+              <h3 className="wrap-break-word text-sm font-semibold text-(--heading-text) min-[400px]:text-base sm:truncate sm:text-lg">
                 {origin} → {destination}
               </h3>
-              <p className="truncate text-sm text-(--paragraph-text)">
+              <p className="wrap-break-word text-xs text-(--paragraph-text) min-[400px]:text-sm sm:truncate">
                 {aircraftType} · {type === "one-way" ? "One-way" : "Round trip"}
               </p>
             </div>
           </div>
-          <Badge variant={badge.variant}>{badge.label}</Badge>
+          <div className="shrink-0 whitespace-nowrap">
+            <Badge variant={badge.variant}>{badge.label}</Badge>
+          </div>
         </div>
 
         {/* মাঝের অংশ: মোবাইলে ১, ট্যাবলেটে ২, ল্যাপটপ+ এ ৩ কলাম */}
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_1.4fr_auto] lg:items-start lg:pl-13">
-          <div>
+        <div className="mt-4 grid gap-3 min-[400px]:gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_1.4fr_auto] lg:items-start lg:pl-13">
+          <div className="min-w-0">
             <p className="text-xs text-(--paragraph-text)">Departure</p>
             <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-(--heading-text)">
-              <Calendar size={14} className="text-(--paragraph-text)" />
+              <Calendar size={14} className="shrink-0 text-(--paragraph-text)" />
               {formatDate(preferredDeparture)}
             </p>
             <p className="text-xs text-(--paragraph-text)">
@@ -145,10 +146,10 @@ const OpportunityCard = ({ opportunity, onReserved }: OpportunityCardProps) => {
             </p>
           </div>
 
-          <div>
+          <div className="min-w-0">
             <p className="text-xs text-(--paragraph-text)">Available Seats</p>
             <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-(--heading-text)">
-              <Users size={14} className="text-(--paragraph-text)" />
+              <Users size={14} className="shrink-0 text-(--paragraph-text)" />
               {available} of {totalCapacity} available
             </p>
             <div
@@ -166,9 +167,9 @@ const OpportunityCard = ({ opportunity, onReserved }: OpportunityCardProps) => {
             </div>
           </div>
 
-          <div className="sm:col-span-2 lg:col-span-1 lg:text-right">
+          <div className="min-w-0 sm:col-span-2 lg:col-span-1 lg:text-right">
             <p className="text-xs text-(--paragraph-text)">Estimated Cost</p>
-            <p className="mt-1 text-2xl font-bold text-(--heading-text)">
+            <p className="mt-1 wrap-break-word text-xl font-bold text-(--heading-text) min-[400px]:text-2xl">
               {formatCurrency(price)}
             </p>
             <p className="text-xs text-(--paragraph-text)">per Member</p>
@@ -183,11 +184,10 @@ const OpportunityCard = ({ opportunity, onReserved }: OpportunityCardProps) => {
 
         {/* বাটন: ক্লিকে খোলে; মাউস থাকলে hover-এও খোলে; টাচ ডিভাইসে ক্লিকে */}
         <div
-          className={`grid transition-[grid-template-rows] duration-200 ${
-            isOpen
+          className={`grid transition-[grid-template-rows] duration-200 ${isOpen
               ? "grid-rows-[1fr]"
               : "grid-rows-[0fr] pointer-fine:group-hover:grid-rows-[1fr]"
-          }`}
+            }`}
         >
           <div className="overflow-hidden">
             <div className="mt-4 border-t border-(--border-color) pt-4">
