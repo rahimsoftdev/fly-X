@@ -84,7 +84,7 @@ export default function Footer() {
                                 />
                             </svg>
                             <span className="mt-1 text-[10px] font-extrabold tracking-[0.28em] text-secondary dark:text-white">
-                                RAVEN
+                                Flyx
                             </span>
                         </Link>
 
@@ -142,7 +142,7 @@ export default function Footer() {
                      border-(--border-color) py-5 text-center text-xs text-(--paragraph-text)
                      sm:flex-row sm:text-left md:mt-12"
                 >
-                    <p>© {new Date().getFullYear()} Raven Aviation. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} Flyx Aviation. All rights reserved.</p>
                     <Link to="/terms" className="transition-colors hover:text-primary">
                         Terms &amp; Conditions
                     </Link>

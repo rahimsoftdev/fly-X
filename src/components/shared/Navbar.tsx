@@ -122,7 +122,7 @@ const Navbar: React.FC = () => {
         <header className="sticky top-0 z-50 w-full border-b border-[var(--border-color)] bg-[var(--background)]/95 backdrop-blur-md transition-colors duration-300">
             <nav className="container-main flex h-20 items-center justify-between">
 
-                {/* Left: Brand Logo (RAVEN) */}
+                {/* Left: Brand Logo (Flyx) */}
                 <Link
                     to="/"
                     className="flex flex-col items-center justify-center group focus:outline-none"
@@ -146,7 +146,7 @@ const Navbar: React.FC = () => {
                         />
                     </svg>
                     <span className="mt-1 text-[10px] font-extrabold tracking-[0.28em] text-secondary dark:text-white">
-                        RAVEN
+                        Flyx
                     </span>
                 </Link>
 

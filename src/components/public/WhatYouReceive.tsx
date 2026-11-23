@@ -24,7 +24,7 @@ const items = [
     icon: ShieldCheck,
     title: "Operator Excellence",
     description:
-      "Raven uses only Part 135 certified operators with the highest records of safety.",
+      "Flyx uses only Part 135 certified operators with the highest records of safety.",
   },
 ];
 

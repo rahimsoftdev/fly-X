@@ -15,7 +15,7 @@ type SidebarUser = {
     image?: string | null;
 } | null;
 
-/* ---------- RAVEN Logo ---------- */
+/* ---------- Flyx Logo ---------- */
 const Logo = ({
     onClick,
     showText = true,
@@ -46,7 +46,7 @@ const Logo = ({
         </svg>
         {showText && (
             <span className="mt-1 text-[10px] font-extrabold tracking-[0.28em] text-secondary dark:text-white">
-                RAVEN
+                Flyx
             </span>
         )}
     </Link>

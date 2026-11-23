@@ -1,10 +1,11 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
-import { useNavigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 import { CheckCircle2, CreditCard, ImagePlus, Lock } from "lucide-react";
 import FormField from "@/components/ui/FormField";
 import type { RegisterPayload } from "@/types/user.type";
 import { register } from "@/utils/auth.util";
 import { uploadImage } from "@/utils/image.util";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 const initialForm: RegisterPayload = {
   firstName: "", lastName: "", address: "", zipCode: "", city: "",
@@ -20,9 +21,13 @@ export default function RegisterPage() {
   // register er por kothay jabe (/user, /admin ba /staff):
   const [redirectPath, setRedirectPath] = useState("/");
 
+
+
   // image upload
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
+
+
 
   // After success, go to dashboard (/role)
   // useEffect(() => {
@@ -104,6 +109,10 @@ export default function RegisterPage() {
       setLoading(false);
     }
   };
+  const { user, role, } = useCurrentUser();
+  if (user) {
+    return <Navigate to={`/${role}`} replace />;
+  }
 
   return (
     <div className="space-y-5">

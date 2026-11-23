@@ -25,9 +25,9 @@ const AdminLayout = () => {
   }
 
   return (
-    <div className="min-h-dvh lg:flex">
+    <div className="min-h-dvh lg:flex max-w-[1700px] mx-auto">
       <DashboardSidebar />
-      <main className="min-w-0 flex-1 p-4">
+      <main className="min-w-0 flex-1 px-4 md:px-6 py-5 md:py-10">
         <Outlet />
       </main>
     </div>

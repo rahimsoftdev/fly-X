@@ -8,7 +8,7 @@ const content = {
     text: "Experience private travel with unmatched comfort, exclusivity, and concierge support.",
   },
   register: {
-    title: "Become a Raven Member",
+    title: "Become a Flyx Member",
     text: "Complete your registration and gain access to exclusive charter flight opportunities.",
   },
 };
@@ -54,7 +54,7 @@ const AuthLayout = () => {
           <div className="relative z-10 flex items-center justify-between">
             <Link
               to="/"
-              aria-label="RAVEN home"
+              aria-label="Flyx home"
               className="group flex cursor-pointer flex-col items-center justify-center p-1 focus:outline-none"
             >
               <svg
@@ -72,7 +72,7 @@ const AuthLayout = () => {
                 <path d="M2 11H16L14 14.5H4L2 11Z" fill="currentColor" />
               </svg>
               <span className="mt-1 text-[10px] font-extrabold tracking-[0.28em] text-secondary dark:text-white">
-                RAVEN
+                Flyx
               </span>
             </Link>
 

@@ -13,7 +13,7 @@ import termsCallActionImg from '@/assets/images/termCallActionImg.png'
 const disclosures: { label: string; text: string }[] = [
     {
         label: "Broker Status",
-        text: "Raven facilitates arrangements for air transportation by selecting FAA-certificated Part 135 air carriers.",
+        text: "Flyx facilitates arrangements for air transportation by selecting FAA-certificated Part 135 air carriers.",
     },
     {
         label: "Operator Identity",
@@ -33,7 +33,7 @@ const disclosures: { label: string; text: string }[] = [
 const clauses: { title: string; text: string }[] = [
     {
         title: "Aircraft Specifics",
-        text: "Raven cannot guarantee a specific tail number or year of manufacture, though we prioritize late-model aircraft within the requested class.",
+        text: "Flyx cannot guarantee a specific tail number or year of manufacture, though we prioritize late-model aircraft within the requested class.",
     },
     {
         title: "Weather & Capacity",
@@ -106,7 +106,7 @@ export default function TermsAndConditionsPage() {
                                     </span>
                                     <h1 className="title-text font-playfair">Terms &amp; Conditions</h1>
                                     <p className="text-sm font-medium text-(--heading-text)">
-                                        Raven Private Aviation Membership
+                                        Flyx Private Aviation Membership
                                     </p>
                                 </div>
 
@@ -131,7 +131,7 @@ export default function TermsAndConditionsPage() {
 
                             <div className={cardClass}>
                                 <p className="mb-4 text-sm font-semibold leading-snug text-(--heading-text) md:text-base">
-                                    Raven Private Aviation acts solely as an air charter broker and
+                                    Flyx Private Aviation acts solely as an air charter broker and
                                     not as a direct air carrier.
                                 </p>
 
@@ -182,7 +182,7 @@ export default function TermsAndConditionsPage() {
                                     </h3>
                                     <p className="text-xs leading-relaxed text-(--paragraph-text) md:text-sm">
                                         In the event of a mechanical failure or carrier cancellation,
-                                        Raven will use commercially reasonable efforts to secure a
+                                        Flyx will use commercially reasonable efforts to secure a
                                         replacement aircraft of equal or greater value, subject to
                                         additional cost if applicable.
                                     </p>
@@ -196,7 +196,7 @@ export default function TermsAndConditionsPage() {
 
                             <div className={`${cardClass} space-y-5`}>
                                 <p className="max-w-2xl text-xs leading-relaxed text-(--paragraph-text) md:text-sm">
-                                    Membership at Raven grants access to a curated ecosystem of
+                                    Membership at Flyx grants access to a curated ecosystem of
                                     shared charter opportunities. Rather than booking an entire
                                     aircraft, members can purchase individual seats or blocks of
                                     seats on pre-existing flight plans.
@@ -279,7 +279,7 @@ export default function TermsAndConditionsPage() {
             <div className="">
                 <CallToAction image={termsCallActionImg}
                     imageAlt="image"
-                    buttonLink="/"
+                    buttonLink="/register"
                     heading="Ready to Elevate Your Travel Experience?"
                     description="Join the exclusive network of executives and founders who have discovered a smarter way to fly private."
                     buttonText="Become a Member"

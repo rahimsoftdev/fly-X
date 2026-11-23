@@ -89,6 +89,9 @@ const router = createBrowserRouter([
             {
                 path:'concierge-staff', Component:ConciergePage
             },
+            {
+                path:'add-concierge', Component:ConciergePage
+            },
         ]
     },
 

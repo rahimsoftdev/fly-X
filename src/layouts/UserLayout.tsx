@@ -25,7 +25,7 @@ const UserLayout = () => {
   }
 
   return (
-    <div className="min-h-dvh lg:flex">
+    <div className="min-h-dvh lg:flex max-w-[1700px] mx-auto">
       <DashboardSidebar />
       <main className="min-w-0 flex-1 px-6 py-10">
         <Outlet />

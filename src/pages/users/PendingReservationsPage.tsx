@@ -8,7 +8,7 @@ const PendingReservationsPage = () => (
     variant="pending"
     title="Pending Reservations"
     subtitle="Reservations awaiting concierge confirmation"
-    notice="You can cancel your reservation before it's confirmed. Once confirmed by Raven, cancellation is not available."
+    notice="You can cancel your reservation before it's confirmed. Once confirmed by Flyx, cancellation is not available."
     emptyTitle="No pending reservations"
     emptyText="Reservations you place will appear here until they are confirmed."
   />

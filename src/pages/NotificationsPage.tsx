@@ -41,7 +41,7 @@ const NOTIFICATIONS: TravelNotification[] = [
     type: "pending",
     title: "Reservation Successfully Submitted",
     description:
-      "Your reservation request has been received and is currently awaiting confirmation from Raven Concierge.",
+      "Your reservation request has been received and is currently awaiting confirmation from Flyx Concierge.",
     route: "Tampa → NYC",
     createdAt: "July 15, 2026",
     read: false,
@@ -73,7 +73,7 @@ const NOTIFICATIONS: TravelNotification[] = [
     type: "pending",
     title: "Reservation Successfully Submitted",
     description:
-      "Your reservation request has been received and is currently awaiting confirmation from Raven Concierge.",
+      "Your reservation request has been received and is currently awaiting confirmation from Flyx Concierge.",
     route: "Miami → Los Angeles",
     createdAt: "July 13, 2026",
     read: true,

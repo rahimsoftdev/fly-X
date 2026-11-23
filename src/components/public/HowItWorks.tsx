@@ -14,7 +14,7 @@ const steps = [
     step: "02",
     title: "Concierge Matching",
     description:
-      "Raven matches your travel preference with other members seeking similar travel, and curates the optimal shared charter.",
+      "Flyx matches your travel preference with other members seeking similar travel, and curates the optimal shared charter.",
     icon: Layers,
   },
   {
@@ -42,7 +42,7 @@ export default function HowItWorks() {
           <p className="text-xs font-medium uppercase tracking-widest text-secondary dark:text-primary">
             The Process
           </p>
-          <h2 className="title-text font-playfair">How Raven Works</h2>
+          <h2 className="title-text font-playfair">How Flyx Works</h2>
         </div>
 
         {/* Cards */}

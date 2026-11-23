@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, Eye, MoreVertical, Trash2, Undo2 } from "lucide-react";
-import type { TravelStatus } from "@/types/travel.type";
+// import type { TravelStatus } from "@/types/travel.type";
 // import type { TravelStatus } from "@/types/custom-travel.types";
 
+type ActionStatus = "interested" | "confirmed";
+
 interface Props {
-  status: TravelStatus;
+  status: ActionStatus;
   onView: () => void;
-  onChangeStatus: (status: TravelStatus) => void;
+  onChangeStatus: (status: ActionStatus) => void;
   onDelete: () => void;
 }
 

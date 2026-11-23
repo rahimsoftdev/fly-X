@@ -9,21 +9,21 @@ export interface FaqItem {
 export const faqData: FaqItem[] = [
   {
     id: 1,
-    question: "What is Raven?",
+    question: "What is Flyx?",
     answer:
-      "Raven is a private travel membership platform that provides access to curated shared charter opportunities between high-demand destinations such as New York and Tampa. Members enjoy a streamlined private aviation experience without the friction of commercial air travel.",
+      "Flyx is a private travel membership platform that provides access to curated shared charter opportunities between high-demand destinations such as New York and Tampa. Members enjoy a streamlined private aviation experience without the friction of commercial air travel.",
   },
   {
     id: 2,
-    question: "How does Raven work?",
+    question: "How does Flyx work?",
     answer:
-      "Raven connects members with shared private charter opportunities based on popular travel routes. Members can explore available flights, select their preferred journey, reserve seats, and enjoy a more convenient private travel experience.",
+      "Flyx connects members with shared private charter opportunities based on popular travel routes. Members can explore available flights, select their preferred journey, reserve seats, and enjoy a more convenient private travel experience.",
   },
   {
     id: 3,
-    question: "Is Raven an airline?",
+    question: "Is Flyx an airline?",
     answer:
-      "No, Raven is not an airline. It is a private travel membership platform that helps members access shared charter opportunities operated by licensed aviation providers.",
+      "No, Flyx is not an airline. It is a private travel membership platform that helps members access shared charter opportunities operated by licensed aviation providers.",
   },
   {
     id: 4,
@@ -33,15 +33,15 @@ export const faqData: FaqItem[] = [
   },
   {
     id: 5,
-    question: "What routes does Raven support?",
+    question: "What routes does Flyx support?",
     answer:
-      "Raven focuses on curated routes between high-demand destinations, including popular connections such as New York and Tampa. Additional routes may be introduced based on member demand and travel availability.",
+      "Flyx focuses on curated routes between high-demand destinations, including popular connections such as New York and Tampa. Additional routes may be introduced based on member demand and travel availability.",
   },
   {
     id: 6,
     question: "Which airports are used?",
     answer:
-      "Raven aims to use convenient regional and private aviation airports whenever possible. The specific departure and arrival airports depend on the selected route and flight arrangements.",
+      "Flyx aims to use convenient regional and private aviation airports whenever possible. The specific departure and arrival airports depend on the selected route and flight arrangements.",
   },
   {
     id: 7,
@@ -107,13 +107,13 @@ export const faqData: FaqItem[] = [
     id: 17,
     question: "Who operates the flights?",
     answer:
-      "Flights are operated by independent aviation providers and licensed charter operators. Raven facilitates access to shared charter opportunities but does not directly operate the aircraft.",
+      "Flights are operated by independent aviation providers and licensed charter operators. Flyx facilitates access to shared charter opportunities but does not directly operate the aircraft.",
   },
   {
     id: 18,
-    question: "Does Raven own aircraft?",
+    question: "Does Flyx own aircraft?",
     answer:
-      "Raven operates as a private travel membership platform and does not necessarily own the aircraft used for its shared charter opportunities. Aircraft are provided by independent aviation operators.",
+      "Flyx operates as a private travel membership platform and does not necessarily own the aircraft used for its shared charter opportunities. Aircraft are provided by independent aviation operators.",
   },
   {
     id: 19,
@@ -131,6 +131,6 @@ export const faqData: FaqItem[] = [
     id: 21,
     question: "How do I become a member?",
     answer:
-      "Becoming a Raven member is simple. Visit the membership section, explore the available options, and complete the registration process. Once registered, you can start exploring curated shared charter opportunities.",
+      "Becoming a Flyx member is simple. Visit the membership section, explore the available options, and complete the registration process. Once registered, you can start exploring curated shared charter opportunities.",
   },
 ];

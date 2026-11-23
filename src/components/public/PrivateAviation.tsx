@@ -14,7 +14,7 @@ const features = [
     title: "The Private Aviation",
     highlight: "Difference",
     description:
-      "See how Raven redefines what travel means. Travel on your terms. No queues. No delays. Just pure, unfiltered luxury.",
+      "See how Flyx redefines what travel means. Travel on your terms. No queues. No delays. Just pure, unfiltered luxury.",
   },
   {
     type: "left" as const,
@@ -24,7 +24,7 @@ const features = [
     title: "Uncompromising",
     highlight: "Safety Standards",
     description:
-      "Safety is the foundation of every Raven travel experience. All flights are operated by FAA-certificated Part 135 air carriers that maintain full operational control and meet rigorous safety, training, maintenance, and regulatory requirements. We partner only with qualified operators committed to delivering the highest standards of professionalism, reliability, and passenger safety.",
+      "Safety is the foundation of every Flyx travel experience. All flights are operated by FAA-certificated Part 135 air carriers that maintain full operational control and meet rigorous safety, training, maintenance, and regulatory requirements. We partner only with qualified operators committed to delivering the highest standards of professionalism, reliability, and passenger safety.",
   },
 ];
 

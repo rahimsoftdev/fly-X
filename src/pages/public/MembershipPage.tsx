@@ -18,7 +18,7 @@ const MembershipPage = () => {
 
             <CallToAction image={homeCallActionImg}
                 imageAlt="image"
-                buttonLink="/"
+               buttonLink="/register"
                 heading="Ready to Elevate Your Travel Experience?"
                 description="Join the exclusive network of executives and founders who have discovered a smarter way to fly private."
                 buttonText="Become a Member"

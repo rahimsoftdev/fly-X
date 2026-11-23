@@ -10,7 +10,6 @@ import {
     User,
     Calendar,
     Users,
-    UserCog,
     UserPlus,
     Settings,
 } from "lucide-react";
@@ -114,11 +113,6 @@ export const adminNavigation = [
         label: "Members",
         path: "/admin/members",
         icon: Users,
-    },
-    {
-        label: "Concierge Staff",
-        path: "/admin/concierge-staff",
-        icon: UserCog,
     },
     {
         label: "Add Concierge",

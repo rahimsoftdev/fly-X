@@ -2,8 +2,10 @@ import { useSearchParams } from "react-router";
 import { Link } from "react-router";
 import Pagination from "@/components/ui/Pagination";
 import { useMyOpportunities } from "@/hooks/useMyOpportunities";
-import BookingCard from "./components/BookingCard";
-import OpportunityCardSkeleton from "../Opportunities/components/OpportunityCardSkeleton";
+import OpportunityCardSkeleton from "@/components/ui/akeletons/OpportunityCardSkeleton";
+import BookingCard from "@/components/Opprotunites/BookingCard";
+// import BookingCard from "./components/BookingCard";
+// import OpportunityCardSkeleton from "../Opportunities/components/OpportunityCardSkeleton";
 
 const LIMIT = 8;
 

@@ -177,7 +177,7 @@ const OpportunityCard = ({ opportunity, onReserved }: OpportunityCardProps) => {
         </div>
 
         <p className="mt-4 text-xs leading-relaxed text-red-600 dark:text-red-400">
-          Note: You will not be charged until the flight is confirmed by Raven.
+          Note: You will not be charged until the flight is confirmed by Flyx.
           Final aircraft type and operator details will be provided upon
           confirmation.
         </p>

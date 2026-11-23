@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, Navigate, useNavigate } from "react-router";
 import FormField from "@/components/ui/FormField";
 import { login } from "@/utils/auth.util";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -27,6 +28,12 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
+  const { user, role, } = useCurrentUser();
+
+  if (user) {
+    return <Navigate to={`/${role}`} replace />;
+  }
 
   return (
     <div className="space-y-6">

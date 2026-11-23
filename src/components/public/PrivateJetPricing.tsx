@@ -69,7 +69,7 @@ export default function PrivateJetPricing() {
           </h2>
 
           <p className="description-text ">
-            By allowing members to co-charter flights on popular routes, Raven
+            By allowing members to co-charter flights on popular routes, Flyx
             reduces individual costs by up to 70% while maintaining the
             uncompromising standards of private aviation.
           </p>

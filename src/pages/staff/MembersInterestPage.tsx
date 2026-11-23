@@ -20,16 +20,18 @@ import {
 import type {
   CustomTravelRequest,
   TravelStatus,
+  // CustomTravelStatus,
 } from "@/types/custom-travel.types";
 
 import StatusBadge from "@/components/staff/StatusBadge";
 import DirectionBadge from "@/components/staff/DirectionBadge";
 import RowActionMenu from "@/components/staff/RowActionMenu";
 import ConfirmModal from "@/components/staff/ConfirmModal";
+import type { CustomTravelStatus } from "@/types/custom-travel.type";
 
 const PAGE_SIZE = 10;
 
-type StatusFilter = "all" | TravelStatus;
+type StatusFilter = "all" | CustomTravelStatus;
 type ToastState = { type: "success" | "error"; message: string } | null;
 
 /* ==================== Helpers ==================== */
@@ -59,9 +61,15 @@ const tripLabel = (type: CustomTravelRequest["type"]) =>
 
 /* ==================== Small UI pieces ==================== */
 
-const Skeleton = ({ className = "" }: { className?: string }) => (
+type SkeletonProps = {
+  className?: string;
+  style?: React.CSSProperties;
+};
+
+const Skeleton = ({ className = "", style }: SkeletonProps) => (
   <div
     className={`animate-pulse rounded-md bg-(--border-color)/70 ${className}`}
+    style={style}
   />
 );
 
@@ -118,9 +126,8 @@ const Toast = ({ toast }: { toast: ToastState }) => {
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-5 z-60 flex justify-center px-4">
       <div
-        className={`pointer-events-auto flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white shadow-lg ${
-          isSuccess ? "bg-green-600" : "bg-red-600"
-        }`}
+        className={`pointer-events-auto flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white shadow-lg ${isSuccess ? "bg-green-600" : "bg-red-600"
+          }`}
       >
         {isSuccess ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
         {toast.message}
@@ -412,17 +419,15 @@ const MembersInterestPage = () => {
                   setStatusFilter(c.key);
                   setPage(1);
                 }}
-                className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
-                  active
+                className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${active
                     ? "border-primary bg-primary text-white"
                     : "border-(--border-color) bg-(--background) text-(--paragraph-text) hover:border-primary hover:text-primary"
-                }`}
+                  }`}
               >
                 {c.label}
                 <span
-                  className={`rounded-full px-1.5 text-[10px] ${
-                    active ? "bg-white/25" : "bg-(--card)"
-                  }`}
+                  className={`rounded-full px-1.5 text-[10px] ${active ? "bg-white/25" : "bg-(--card)"
+                    }`}
                 >
                   {c.count}
                 </span>
@@ -498,9 +503,8 @@ const MembersInterestPage = () => {
                     return (
                       <tr
                         key={item._id}
-                        className={`border-b border-(--border-color) transition-all last:border-b-0 hover:bg-(--card)/60 ${
-                          pending ? "opacity-60" : ""
-                        }`}
+                        className={`border-b border-(--border-color) transition-all last:border-b-0 hover:bg-(--card)/60 ${pending ? "opacity-60" : ""
+                          }`}
                       >
                         <td className="max-w-64 px-4 py-4">
                           <div className="flex items-center gap-3">
@@ -559,9 +563,8 @@ const MembersInterestPage = () => {
               return (
                 <div
                   key={item._id}
-                  className={`rounded-xl border border-(--border-color) bg-(--background) p-4 shadow-sm transition-all ${
-                    pending ? "opacity-60" : ""
-                  }`}
+                  className={`rounded-xl border border-(--border-color) bg-(--background) p-4 shadow-sm transition-all ${pending ? "opacity-60" : ""
+                    }`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex min-w-0 items-center gap-3">

@@ -12,7 +12,7 @@ const steps = [
     step: "02",
     title: "Reservation",
     description:
-      "Based on shared travel preferences, Raven will curate a shared travel experience on which you can place a reservation.",
+      "Based on shared travel preferences, Flyx will curate a shared travel experience on which you can place a reservation.",
   },
   {
     step: "03",
