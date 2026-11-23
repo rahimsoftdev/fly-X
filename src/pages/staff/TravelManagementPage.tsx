@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Filter } from "lucide-react";
 import TravelDetailsModal from "@/components/travel/TravelDetailsModal";
 import TravelRowActions from "@/components/travel/TravelRowActions";
@@ -34,6 +34,77 @@ const RoutePill = ({ route }: { route: string }) => (
   </span>
 );
 
+interface PendingChange {
+  id: string;
+  next: TravelStatus;
+}
+
+interface ConfirmModalProps {
+  title: string;
+  message: string;
+  confirmLabel?: string;
+  loading?: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+const ConfirmModal = ({
+  title,
+  message,
+  confirmLabel = "Confirm",
+  loading = false,
+  onConfirm,
+  onCancel,
+}: ConfirmModalProps) => {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !loading) onCancel();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [loading, onCancel]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
+      onClick={() => {
+        if (!loading) onCancel();
+      }}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-sm rounded-2xl border border-(--border-color) bg-(--background) p-5 shadow-xl sm:p-6"
+      >
+        <h3 className="text-base font-semibold text-(--heading-text) sm:text-lg">
+          {title}
+        </h3>
+        <p className="mt-2 text-sm text-(--paragraph-text)">{message}</p>
+
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:flex sm:justify-end">
+          <button
+            type="button"
+            disabled={loading}
+            onClick={onCancel}
+            className="rounded-full border border-(--border-color) px-5 py-2 text-sm font-medium text-(--heading-text) transition hover:bg-(--card) disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            disabled={loading}
+            onClick={onConfirm}
+            className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {loading ? "Please wait..." : confirmLabel}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const TravelManagementPage = () => {
   const [type, setType] = useState<TravelType>("regular");
   const [direction, setDirection] = useState(""); // "origin|destination"
@@ -42,6 +113,7 @@ const TravelManagementPage = () => {
   const [detailsId, setDetailsId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [pending, setPending] = useState<PendingChange | null>(null);
 
   const [origin, destination] = direction ? direction.split("|") : [];
   const isOneTime = type === "one-time";
@@ -76,14 +148,23 @@ const TravelManagementPage = () => {
     setPage(1);
   };
 
-  const handleChangeStatus = async (id: string, next: TravelStatus) => {
-    if (!window.confirm(`Mark this travel as "${capitalize(next)}"?`)) return;
+  // Action menu theke call hoy: shudhu confirmation modal khole
+  const handleChangeStatus = (id: string, next: TravelStatus) => {
+    setActionError(null);
+    setPending({ id, next });
+  };
+
+  // Modal-er Confirm button e asol kaj hoy
+  const confirmChange = async () => {
+    if (!pending) return;
     setBusy(true);
     setActionError(null);
     try {
-      await updateManageTravelStatus(id, next);
+      await updateManageTravelStatus(pending.id, pending.next);
+      setPending(null);
       refetch();
     } catch (err) {
+      setPending(null);
       setActionError(
         err instanceof Error ? err.message : "Failed to update status"
       );
@@ -313,6 +394,18 @@ const TravelManagementPage = () => {
         <TravelDetailsModal
           id={detailsId}
           onClose={() => setDetailsId(null)}
+        />
+      )}
+
+      {/* Confirmation modal (window.confirm er poriborte) */}
+      {pending && (
+        <ConfirmModal
+          title="Change status?"
+          message={`Are you sure you want to mark this travel as "${capitalize(pending.next)}"?`}
+          confirmLabel="Yes, confirm"
+          loading={busy}
+          onConfirm={confirmChange}
+          onCancel={() => setPending(null)}
         />
       )}
     </div>
