@@ -20,6 +20,7 @@ export default function DashboardPage() {
   const { data, loading, error, refetch } = useDashboard();
 
   const firstName = data?.user.name?.trim().split(" ")[0] || "there";
+  console.log(data, 'this is data')
 
   return (
     <div className="space-y-5 ">

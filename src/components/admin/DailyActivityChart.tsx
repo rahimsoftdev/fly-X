@@ -15,7 +15,7 @@ interface Props {
     opportunities: number;
     reservations: number;
     flightsBooked: number;
-  }[];r
+  }[];
 }
 
 export const ACTIVITY_SERIES = [

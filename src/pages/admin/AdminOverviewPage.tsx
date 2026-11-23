@@ -86,7 +86,7 @@ export default function AdminOverviewPage() {
   );
 
   return (
-    <div className="space-y-5 p-6">
+    <div className="space-y-5 ">
       <header>
         <h1 className="font-serif text-2xl font-semibold text-gray-900 dark:text-gray-50">
           Admin Overview

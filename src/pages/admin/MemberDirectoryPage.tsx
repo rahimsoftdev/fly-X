@@ -1,0 +1,407 @@
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { Mail, MapPin, MoreVertical, Phone, X } from "lucide-react";
+// import { api } from "@/lib/api";
+import { useFetch } from "@/hooks/useFetch";
+import { api } from "@/lib/axios";
+
+/* ---------------- Types ---------------- */
+interface Member {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  fullAddress: string;
+}
+
+interface MemberListResponse {
+  items: Member[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasPrevPage: boolean;
+    hasNextPage: boolean;
+  };
+}
+
+/* ---------------- Constants ---------------- */
+const LIMIT = 10;
+const PAYMENT = "$199"; // backend-এ payment নেই, তাই আপাতত fixed
+const MENU_WIDTH = 176;
+
+const noScrollbar =
+  "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden";
+
+/* ---------------- API ---------------- */
+const getMembers = async (
+  page: number,
+  signal: AbortSignal
+): Promise<MemberListResponse> => {
+  const res = await api.get<{ success: boolean; data: MemberListResponse }>(
+    "/users",
+    { params: { page, limit: LIMIT }, signal }
+  );
+  return res.data.data;
+};
+
+/* ---------------- Row actions (3-dot) ---------------- */
+const RowActions = ({ onView }: { onView: () => void }) => {
+  const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState({ top: 0, left: 0 });
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const toggle = () => {
+    if (open) return setOpen(false);
+    const rect = btnRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    const menuHeight = 56;
+    const openUp = window.innerHeight - rect.bottom < menuHeight + 8;
+    const left = Math.min(
+      Math.max(8, rect.right - MENU_WIDTH),
+      window.innerWidth - MENU_WIDTH - 8
+    );
+    setPos({
+      top: openUp ? rect.top - menuHeight - 4 : rect.bottom + 4,
+      left,
+    });
+    setOpen(true);
+  };
+
+  // বাইরে click, scroll, resize বা Escape-এ বন্ধ
+  useEffect(() => {
+    if (!open) return;
+    const close = () => setOpen(false);
+    const onClick = (e: MouseEvent) => {
+      const t = e.target as Node;
+      if (menuRef.current?.contains(t) || btnRef.current?.contains(t)) return;
+      close();
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
+
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    window.addEventListener("scroll", close, true);
+    window.addEventListener("resize", close);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+      window.removeEventListener("scroll", close, true);
+      window.removeEventListener("resize", close);
+    };
+  }, [open]);
+
+  return (
+    <>
+      <button
+        ref={btnRef}
+        type="button"
+        onClick={toggle}
+        aria-label="Actions"
+        aria-haspopup="menu"
+        className="inline-flex h-9 w-9 items-center justify-center rounded-full text-(--paragraph-text) transition hover:bg-(--card) hover:text-(--heading-text)"
+      >
+        <MoreVertical size={18} />
+      </button>
+
+      {open &&
+        createPortal(
+          <div
+            ref={menuRef}
+            role="menu"
+            style={{ top: pos.top, left: pos.left, width: MENU_WIDTH }}
+            className="fixed z-[90] rounded-xl border border-(--border-color) bg-(--background) p-1.5 shadow-lg"
+          >
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                setOpen(false);
+                onView();
+              }}
+              className="block w-full rounded-lg px-3 py-2 text-left text-sm text-(--heading-text) transition hover:bg-(--card)"
+            >
+              View Details
+            </button>
+          </div>,
+          document.body
+        )}
+    </>
+  );
+};
+
+/* ---------------- Details modal ---------------- */
+const InfoRow = ({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) => (
+  <div className="flex items-start gap-3 rounded-xl bg-(--card) p-4">
+    <span className="mt-0.5 shrink-0 text-(--paragraph-text)">{icon}</span>
+    <div className="min-w-0">
+      <p className="text-xs text-(--paragraph-text)">{label}</p>
+      <p className="mt-0.5 break-words text-sm font-medium text-(--heading-text)">
+        {value || "—"}
+      </p>
+    </div>
+  </div>
+);
+
+const MemberDetailsModal = ({
+  member,
+  onClose,
+}: {
+  member: Member;
+  onClose: () => void;
+}) => {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
+      onClick={onClose}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        onClick={(e) => e.stopPropagation()}
+        className={`max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-2xl border border-(--border-color) bg-(--background) p-5 shadow-xl sm:p-6 ${noScrollbar}`}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="truncate text-lg font-semibold text-(--heading-text)">
+              {member.name}
+            </h3>
+            <p className="text-sm text-(--paragraph-text)">Member details</p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="shrink-0 rounded-full p-2 text-(--paragraph-text) transition hover:bg-(--card)"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="mt-5 space-y-3">
+          <InfoRow icon={<Mail size={16} />} label="Email" value={member.email} />
+          <InfoRow icon={<Phone size={16} />} label="Phone" value={member.phone} />
+          <InfoRow
+            icon={<MapPin size={16} />}
+            label="Address"
+            value={member.address}
+          />
+
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { label: "City", value: member.city },
+              { label: "State", value: member.state },
+              { label: "Zip Code", value: member.zipCode },
+            ].map((f) => (
+              <div key={f.label} className="rounded-xl bg-(--card) p-4">
+                <p className="text-xs text-(--paragraph-text)">{f.label}</p>
+                <p className="mt-0.5 break-words text-sm font-medium text-(--heading-text)">
+                  {f.value || "—"}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-6 w-full rounded-full border border-primary px-5 py-2.5 text-sm font-medium text-primary transition hover:bg-blue-50"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
+};
+
+/* ---------------- Page ---------------- */
+const MemberDirectoryPage = () => {
+  const [page, setPage] = useState(1);
+  const [selected, setSelected] = useState<Member | null>(null);
+
+  const { data, isLoading, error } = useFetch(
+    (signal) => getMembers(page, signal),
+    [page]
+  );
+
+  const items = data?.items ?? [];
+  const meta = data?.meta;
+
+  const from = meta && meta.total > 0 ? (meta.page - 1) * meta.limit + 1 : 0;
+  const to = meta ? Math.min(meta.page * meta.limit, meta.total) : 0;
+
+  return (
+    <div className="mx-auto w-full max-w-7xl space-y-5 sm:space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-xl font-bold leading-tight text-(--heading-text) sm:text-2xl lg:text-3xl">
+          Member Directory
+        </h1>
+        <p className="mt-1 text-sm text-(--paragraph-text)">
+          System Operational
+        </p>
+      </div>
+
+      {error && (
+        <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600 dark:bg-red-500/10">
+          {error}
+        </p>
+      )}
+
+      {/* Table (lg+) */}
+      <div className="hidden rounded-xl border border-(--border-color) lg:block">
+        <table className="w-full table-fixed text-left text-sm">
+          <thead>
+            <tr className="border-b border-(--border-color) text-xs font-medium text-(--paragraph-text)">
+              <th className="w-[16%] px-4 py-3">Name</th>
+              <th className="w-[15%] px-4 py-3">Phone Number</th>
+              <th className="w-[24%] px-4 py-3">Email</th>
+              <th className="w-[24%] px-4 py-3">Address</th>
+              <th className="w-[11%] px-4 py-3">Payment</th>
+              <th className="w-[10%] px-4 py-3 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody className={isLoading ? "opacity-60" : ""}>
+            {items.map((m) => (
+              <tr
+                key={m.id}
+                className="border-b border-(--border-color) align-middle text-(--heading-text) last:border-b-0"
+              >
+                <td className="break-words px-4 py-4 font-medium">{m.name}</td>
+                <td className="whitespace-nowrap px-4 py-4">{m.phone}</td>
+                <td className="break-all px-4 py-4">{m.email}</td>
+                <td className="break-words px-4 py-4">{m.fullAddress}</td>
+                <td className="px-4 py-4">{PAYMENT}</td>
+                <td className="px-4 py-2 text-right">
+                  <div className="flex justify-end">
+                    <RowActions onView={() => setSelected(m)} />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Cards (mobile + tablet) */}
+      <div
+        className={`grid gap-3 sm:grid-cols-2 sm:gap-4 lg:hidden ${
+          isLoading ? "opacity-60" : ""
+        }`}
+      >
+        {items.map((m) => (
+          <div
+            key={m.id}
+            className="rounded-xl border border-(--border-color) p-4"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-(--heading-text)">
+                  {m.name}
+                </p>
+                <p className="mt-0.5 text-xs text-(--paragraph-text)">
+                  {m.phone}
+                </p>
+              </div>
+              <div className="shrink-0">
+                <RowActions onView={() => setSelected(m)} />
+              </div>
+            </div>
+
+            <dl className="mt-4 grid grid-cols-1 gap-3 border-t border-(--border-color) pt-4 text-xs">
+              <div className="min-w-0">
+                <dt className="text-(--paragraph-text)">Email</dt>
+                <dd className="mt-0.5 break-all font-medium text-(--heading-text)">
+                  {m.email}
+                </dd>
+              </div>
+              <div className="min-w-0">
+                <dt className="text-(--paragraph-text)">Address</dt>
+                <dd className="mt-0.5 break-words font-medium text-(--heading-text)">
+                  {m.fullAddress}
+                </dd>
+              </div>
+              <div className="min-w-0">
+                <dt className="text-(--paragraph-text)">Payment</dt>
+                <dd className="mt-0.5 font-medium text-(--heading-text)">
+                  {PAYMENT}
+                </dd>
+              </div>
+            </dl>
+          </div>
+        ))}
+      </div>
+
+      {isLoading && !data && (
+        <p className="py-12 text-center text-sm text-(--paragraph-text)">
+          Loading...
+        </p>
+      )}
+
+      {!isLoading && !error && items.length === 0 && (
+        <p className="px-4 py-12 text-center text-sm text-(--paragraph-text)">
+          No members found.
+        </p>
+      )}
+
+      {/* Pagination */}
+      {meta && meta.total > 0 && (
+        <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
+          <p className="text-center text-sm text-primary sm:text-left">
+            Showing {from} to {to} of {meta.total} results
+          </p>
+          <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto">
+            <button
+              type="button"
+              disabled={!meta.hasPrevPage || isLoading}
+              onClick={() => setPage((p) => p - 1)}
+              className="rounded-full border border-primary px-5 py-2 text-sm font-medium text-primary transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              disabled={!meta.hasNextPage || isLoading}
+              onClick={() => setPage((p) => p + 1)}
+              className="rounded-full border border-primary px-5 py-2 text-sm font-medium text-primary transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Details modal */}
+      {selected && (
+        <MemberDetailsModal
+          member={selected}
+          onClose={() => setSelected(null)}
+        />
+      )}
+    </div>
+  );
+};
+
+export default MemberDirectoryPage;

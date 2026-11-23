@@ -133,6 +133,10 @@ const nowTime = () =>
 const lastText = (c: Conversation) =>
   c.messages[c.messages.length - 1]?.text.replace(/\n/g, " ") ?? "";
 
+// scroll চলবে, কিন্তু scroll bar দেখা যাবে না
+const noScrollbar =
+  "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden";
+
 /* ---------------- Avatar ---------------- */
 function Avatar({
   name,
@@ -218,20 +222,21 @@ export default function InboxPage() {
   };
 
   return (
-    <div className="flex h-dvh w-full overflow-hidden bg-white text-gray-900 dark:bg-slate-900 dark:text-gray-50">
+    // StaffLayout এর main এ py-10 (মোট 5rem) আছে, সেটা বাদ দিয়ে উচ্চতা
+    <div className="flex h-[calc(100dvh-5rem)] min-h-0 w-full overflow-hidden bg-white text-gray-900 dark:bg-slate-900 dark:text-gray-50">
       {/* ============ Sidebar ============ */}
       <aside
         className={`${
           showChat ? "hidden md:flex" : "flex"
-        } w-full shrink-0 flex-col border-r border-gray-200  md:w-80 lg:w-96 dark:border-slate-700 dark:bg-slate-900`}
+        } min-h-0 w-full shrink-0 flex-col border-r border-gray-200  md:w-80 lg:w-96 dark:border-slate-700 dark:bg-slate-900`}
       >
-        <div className="border-b border-gray-200 px-5 py-5 dark:border-slate-700">
+        <div className="shrink-0 border-b border-gray-200 px-5 py-5 dark:border-slate-700">
           <h1 className="text-lg font-semibold text-blue-600 dark:text-blue-400">
             Inboxes
           </h1>
         </div>
 
-        <div className="p-3">
+        <div className="shrink-0 p-3">
           <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 focus-within:border-blue-500 dark:border-slate-700 dark:bg-slate-800">
             <Search size={14} className="shrink-0 text-gray-400" />
             <input
@@ -243,7 +248,7 @@ export default function InboxPage() {
           </div>
         </div>
 
-        <ul className="flex-1 space-y-1 overflow-y-auto px-2 pb-3">
+        <ul className={`min-h-0 flex-1 space-y-1 overflow-y-auto px-2 pb-3 ${noScrollbar}`}>
           {filtered.length === 0 && (
             <li className="px-3 py-10 text-center text-xs text-gray-500 dark:text-slate-400">
               No conversations found
@@ -294,12 +299,12 @@ export default function InboxPage() {
       <section
         className={`${
           showChat ? "flex" : "hidden md:flex"
-        } min-w-0 flex-1 flex-col bg-white dark:bg-slate-900`}
+        } min-h-0 min-w-0 flex-1 flex-col bg-white dark:bg-slate-900`}
       >
         {active ? (
           <>
             {/* Header */}
-            <header className="flex items-center gap-3 border-b border-gray-200 px-3 py-3 sm:px-5 dark:border-slate-700">
+            <header className="flex shrink-0 items-center gap-3 border-b border-gray-200 px-3 py-3 sm:px-5 dark:border-slate-700">
               <button
                 onClick={() => setShowChat(false)}
                 aria-label="Back to inbox"
@@ -326,7 +331,7 @@ export default function InboxPage() {
             </header>
 
             {/* Messages */}
-            <div className="flex-1 space-y-5 overflow-y-auto px-3 py-5 sm:px-6">
+            <div className={`min-h-0 flex-1 space-y-5 overflow-y-auto px-3 py-5 sm:px-6 ${noScrollbar}`}>
               <div className="flex justify-center">
                 <span className="rounded-full border border-gray-200 bg-white px-4 py-1 text-[10px] font-medium uppercase tracking-widest text-gray-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400">
                   Today
@@ -364,7 +369,7 @@ export default function InboxPage() {
             {/* Input */}
             <form
               onSubmit={handleSend}
-              className="border-t border-gray-200 p-3 sm:p-4 dark:border-slate-700"
+              className="shrink-0 border-t border-gray-200 p-3 sm:p-4 dark:border-slate-700"
             >
               <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 shadow-sm focus-within:border-blue-500 dark:border-slate-700 dark:bg-slate-800">
                 <input
