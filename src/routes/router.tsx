@@ -4,6 +4,7 @@ import PublicLayout from '@/layouts/PublicLayout'
 import StaffLayout from '@/layouts/StaffLayout'
 import UserLayout from '@/layouts/UserLayout'
 import AdminOverviewPage from '@/pages/admin/AdminOverviewPage'
+import ConciergePage from '@/pages/admin/ConciergePage'
 import MemberDirectoryPage from '@/pages/admin/MemberDirectoryPage'
 import LoginPage from '@/pages/auth/LoginPage'
 import RegisterPage from '@/pages/auth/RegisterPage'
@@ -81,7 +82,13 @@ const router = createBrowserRouter([
             },
             {
                 path:'members', Component:MemberDirectoryPage
-            }
+            },
+            {
+                path:'setting', Component:ProfileSettingsPage
+            },
+            {
+                path:'concierge-staff', Component:ConciergePage
+            },
         ]
     },
 

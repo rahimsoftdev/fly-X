@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
 import { Mail, MapPin, MoreVertical, Phone, X } from "lucide-react";
 // import { api } from "@/lib/api";
@@ -9,6 +9,8 @@ import { api } from "@/lib/axios";
 interface Member {
   id: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
   phone: string;
   email: string;
   address: string;
@@ -28,6 +30,17 @@ interface MemberListResponse {
     hasPrevPage: boolean;
     hasNextPage: boolean;
   };
+}
+
+interface EditForm {
+  firstName: string;
+  lastName: string;
+  address: string;
+  zipCode: string;
+  city: string;
+  state: string;
+  phone: string;
+  email: string;
 }
 
 /* ---------------- Constants ---------------- */
@@ -50,8 +63,18 @@ const getMembers = async (
   return res.data.data;
 };
 
+const updateMember = async (id: string, body: EditForm): Promise<void> => {
+  await api.patch(`/users/${id}`, body);
+};
+
 /* ---------------- Row actions (3-dot) ---------------- */
-const RowActions = ({ onView }: { onView: () => void }) => {
+const RowActions = ({
+  onView,
+  onEdit,
+}: {
+  onView: () => void;
+  onEdit: () => void;
+}) => {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState({ top: 0, left: 0 });
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -62,7 +85,7 @@ const RowActions = ({ onView }: { onView: () => void }) => {
     const rect = btnRef.current?.getBoundingClientRect();
     if (!rect) return;
 
-    const menuHeight = 56;
+    const menuHeight = 96;
     const openUp = window.innerHeight - rect.bottom < menuHeight + 8;
     const left = Math.min(
       Math.max(8, rect.right - MENU_WIDTH),
@@ -98,6 +121,9 @@ const RowActions = ({ onView }: { onView: () => void }) => {
     };
   }, [open]);
 
+  const itemClass =
+    "block w-full rounded-lg px-3 py-2 text-left text-sm text-(--heading-text) transition hover:bg-(--card)";
+
   return (
     <>
       <button
@@ -126,9 +152,20 @@ const RowActions = ({ onView }: { onView: () => void }) => {
                 setOpen(false);
                 onView();
               }}
-              className="block w-full rounded-lg px-3 py-2 text-left text-sm text-(--heading-text) transition hover:bg-(--card)"
+              className={itemClass}
             >
               View Details
+            </button>
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                setOpen(false);
+                onEdit();
+              }}
+              className={itemClass}
+            >
+              Edit
             </button>
           </div>,
           document.body
@@ -236,12 +273,232 @@ const MemberDetailsModal = ({
   );
 };
 
+/* ---------------- Edit modal ---------------- */
+const inputClass =
+  "w-full rounded-lg border border-(--border-color) bg-(--background) px-3 py-2.5 text-sm text-(--heading-text) outline-none transition placeholder:text-(--paragraph-text)/60 focus:border-primary disabled:opacity-60";
+
+const Field = ({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) => (
+  <label className="block">
+    <span className="mb-1.5 block text-sm text-(--heading-text)">{label}</span>
+    {children}
+  </label>
+);
+
+// firstName/lastName না এলে name ভেঙে নেওয়া হয়
+const splitName = (m: Member) => {
+  if (m.firstName || m.lastName) {
+    return { firstName: m.firstName ?? "", lastName: m.lastName ?? "" };
+  }
+  const [first = "", ...rest] = m.name.trim().split(/\s+/);
+  return { firstName: first, lastName: rest.join(" ") };
+};
+
+const MemberEditModal = ({
+  member,
+  onClose,
+  onSaved,
+}: {
+  member: Member;
+  onClose: () => void;
+  onSaved: () => void;
+}) => {
+  const [form, setForm] = useState<EditForm>(() => ({
+    ...splitName(member),
+    address: member.address,
+    zipCode: member.zipCode,
+    city: member.city,
+    state: member.state,
+    phone: member.phone,
+    email: member.email,
+  }));
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !saving) onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose, saving]);
+
+  const set =
+    (key: keyof EditForm) => (e: React.ChangeEvent<HTMLInputElement>) =>
+      setForm((f) => ({ ...f, [key]: e.target.value }));
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    const body = Object.fromEntries(
+      Object.entries(form).map(([k, v]) => [k, v.trim()])
+    ) as unknown as EditForm;
+
+    if (Object.values(body).some((v) => v === "")) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await updateMember(member.id, body);
+      onSaved();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to save changes");
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
+      onClick={() => {
+        if (!saving) onClose();
+      }}
+    >
+      <form
+        role="dialog"
+        aria-modal="true"
+        onSubmit={handleSubmit}
+        onClick={(e) => e.stopPropagation()}
+        className={`max-h-[92dvh] w-full max-w-lg overflow-y-auto rounded-2xl border border-(--border-color) bg-(--background) p-5 shadow-xl sm:p-7 ${noScrollbar}`}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="text-xl font-semibold text-(--heading-text) sm:text-2xl">
+              Personal Information
+            </h3>
+            <p className="mt-1 text-sm text-(--paragraph-text)">
+              Please enter your details as they appear on your ID.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={saving}
+            aria-label="Close"
+            className="shrink-0 rounded-full p-2 text-(--paragraph-text) transition hover:bg-(--card) disabled:opacity-50"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="mt-5 grid grid-cols-1 gap-4 border-t border-(--border-color) pt-5 sm:grid-cols-2">
+          <Field label="First Name">
+            <input
+              value={form.firstName}
+              onChange={set("firstName")}
+              placeholder="Enter your full name"
+              disabled={saving}
+              className={inputClass}
+            />
+          </Field>
+          <Field label="Last Name">
+            <input
+              value={form.lastName}
+              onChange={set("lastName")}
+              placeholder="Enter your last name"
+              disabled={saving}
+              className={inputClass}
+            />
+          </Field>
+
+          <div className="sm:col-span-2">
+            <Field label="Address">
+              <input
+                value={form.address}
+                onChange={set("address")}
+                placeholder="Enter your full address"
+                disabled={saving}
+                className={inputClass}
+              />
+            </Field>
+          </div>
+
+          <div className="sm:col-span-2">
+            <Field label="Zip Code">
+              <input
+                value={form.zipCode}
+                onChange={set("zipCode")}
+                placeholder="Enter Zip Code"
+                disabled={saving}
+                className={inputClass}
+              />
+            </Field>
+          </div>
+
+          <Field label="City">
+            <input
+              value={form.city}
+              onChange={set("city")}
+              placeholder="New York City"
+              disabled={saving}
+              className={inputClass}
+            />
+          </Field>
+          <Field label="State">
+            <input
+              value={form.state}
+              onChange={set("state")}
+              placeholder="New York"
+              disabled={saving}
+              className={inputClass}
+            />
+          </Field>
+
+          <Field label="Phone Number">
+            <input
+              type="tel"
+              value={form.phone}
+              onChange={set("phone")}
+              placeholder="Enter your phone number"
+              disabled={saving}
+              className={inputClass}
+            />
+          </Field>
+          <Field label="Email">
+            <input
+              type="email"
+              value={form.email}
+              onChange={set("email")}
+              placeholder="Enter your email"
+              disabled={saving}
+              className={inputClass}
+            />
+          </Field>
+        </div>
+
+        {error && (
+          <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600 dark:bg-red-500/10">
+            {error}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={saving}
+          className="mt-6 w-full rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {saving ? "Saving..." : "Save"}
+        </button>
+      </form>
+    </div>
+  );
+};
+
 /* ---------------- Page ---------------- */
 const MemberDirectoryPage = () => {
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState<Member | null>(null);
+  const [editing, setEditing] = useState<Member | null>(null);
 
-  const { data, isLoading, error } = useFetch(
+  const { data, isLoading, error, refetch } = useFetch(
     (signal) => getMembers(page, signal),
     [page]
   );
@@ -296,7 +553,10 @@ const MemberDirectoryPage = () => {
                 <td className="px-4 py-4">{PAYMENT}</td>
                 <td className="px-4 py-2 text-right">
                   <div className="flex justify-end">
-                    <RowActions onView={() => setSelected(m)} />
+                    <RowActions
+                      onView={() => setSelected(m)}
+                      onEdit={() => setEditing(m)}
+                    />
                   </div>
                 </td>
               </tr>
@@ -326,7 +586,10 @@ const MemberDirectoryPage = () => {
                 </p>
               </div>
               <div className="shrink-0">
-                <RowActions onView={() => setSelected(m)} />
+                <RowActions
+                  onView={() => setSelected(m)}
+                  onEdit={() => setEditing(m)}
+                />
               </div>
             </div>
 
@@ -398,6 +661,18 @@ const MemberDirectoryPage = () => {
         <MemberDetailsModal
           member={selected}
           onClose={() => setSelected(null)}
+        />
+      )}
+
+      {/* Edit modal */}
+      {editing && (
+        <MemberEditModal
+          member={editing}
+          onClose={() => setEditing(null)}
+          onSaved={() => {
+            setEditing(null);
+            refetch();
+          }}
         />
       )}
     </div>
