@@ -1,18 +1,15 @@
 import DashboardSidebar from "@/components/shared/DashboardSidebar";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import LoadingPage from "@/pages/LoadingPage";
 import { Navigate, Outlet } from "react-router";
 
 const UserLayout = () => {
   const { user, role, isPending } = useCurrentUser();
 
   // session load hocche, ekhon redirect kora jabe na
-  if (isPending) {
-    return (
-      <div className="flex min-h-dvh items-center justify-center text-sm text-(--paragraph-text)">
-        Loading...
-      </div>
-    );
-  }
+   if (isPending) {
+     return <LoadingPage/>
+   }
 
   // login kora nai
   if (!user) {

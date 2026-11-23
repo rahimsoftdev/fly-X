@@ -1,5 +1,6 @@
 import DashboardSidebar from "@/components/shared/DashboardSidebar";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import LoadingPage from "@/pages/LoadingPage";
 import { Navigate, Outlet } from "react-router";
 
 const AdminLayout = () => {
@@ -7,11 +8,7 @@ const AdminLayout = () => {
 
   // session load hocche, ekhon redirect kora jabe na
   if (isPending) {
-    return (
-      <div className="flex min-h-dvh items-center justify-center text-sm text-(--paragraph-text)">
-        Loading...
-      </div>
-    );
+    return <LoadingPage/>
   }
 
   // login kora nai

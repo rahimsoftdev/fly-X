@@ -9,6 +9,8 @@ import MemberDirectoryPage from '@/pages/admin/MemberDirectoryPage'
 import LoginPage from '@/pages/auth/LoginPage'
 import RegisterPage from '@/pages/auth/RegisterPage'
 import InboxPage from '@/pages/InboxPage'
+import LoadingPage from '@/pages/LoadingPage'
+import NotFound from '@/pages/NotFound'
 import NotificationsPage from '@/pages/NotificationsPage'
 import ProfileSettingsPage from '@/pages/ProfileSettingsPage'
 import ContactPage from '@/pages/public/ContactPage'
@@ -175,7 +177,11 @@ const router = createBrowserRouter([
         ],
     },
 
+    {
+        path:'loading', Component:LoadingPage
+    },
 
+    { path: "*", element: <NotFound /> },
 ])
 
 export default router
