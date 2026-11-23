@@ -1,3 +1,4 @@
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Link } from "react-router";
 
 type CallToActionProps = {
@@ -21,6 +22,13 @@ export default function CallToAction({
     buttonLink,
     isDark
 }: CallToActionProps) {
+
+    const { user, role } = useCurrentUser()
+
+    // user login thakle /role e jabe, text hobe "Dashboard"
+    const finalLink = user ? `/${role}` : buttonLink;
+    const finalText = user ? "Dashboard" : buttonText;
+
     return (
         <section
             id="call-to-action"
@@ -41,7 +49,7 @@ export default function CallToAction({
 
             <div className="container-main section-padding">
                 <div className="mx-auto flex min-h-64 max-w-3xl flex-col items-center justify-center gap-4 text-center md:min-h-72 md:gap-5 xl:min-h-80">
-                    <h2 className="font-playfair text-2xl font-medium leading-tight tracking-tight text-white sm:text-3xl md:text-4xl xl:text-5xl">
+                    <h2 className="font-playfair text-2xl font-medium leading-tight tracking-tight text-white sm:text-3xl md:text-4xl  lg:text-[40px]">
                         {heading}
                         {highlight && (
                             <>
@@ -57,14 +65,14 @@ export default function CallToAction({
                     </p>
 
                     <Link
-                        to={buttonLink}
+                        to={finalLink}
                         className="mt-1 inline-flex items-center justify-center rounded-full bg-primary
                        px-6 py-2.5 text-sm font-medium text-white transition-all duration-300
                        hover:bg-white hover:text-secondary hover:shadow-lg
                        focus-visible:outline-2 focus-visible:outline-offset-2
                        focus-visible:outline-white active:scale-95"
                     >
-                        {buttonText}
+                        {finalText}
                     </Link>
                 </div>
             </div>
