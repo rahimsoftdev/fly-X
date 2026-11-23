@@ -26,7 +26,7 @@ export default function PageHero({
 
   <div className="container-main">
     <div className="flex min-h-56 flex-col justify-end gap-3 py-8 sm:min-h-64 md:min-h-72 md:gap-4 md:py-10 xl:min-h-80 xl:py-12">
-      <h1 className="max-w-md font-playfair text-3xl font-semibold leading-tight tracking-tight text-white drop-shadow-md sm:text-4xl md:max-w-lg md:text-5xl">
+      <h1 className="max-w-md font-playfair text-3xl font-semibold leading-tight tracking-tight text-white drop-shadow-md sm:text-4xl md:max-w-lg lg:text-[40px]">
         {heading}
       </h1>
 

@@ -1,37 +1,51 @@
 import { Link } from "react-router";
+import { Globe } from "lucide-react";
 
-/* lucide-react v1 e brand icon nai, tai inline SVG use korechi */
-const FacebookIcon = () => (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden="true">
+/* lucide-react v1 e brand icon nai, tai inline SVG (currentColor, hover e color change kore) */
+const FacebookIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
         <path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H8v3h2.4V21h3.1z" />
     </svg>
 );
 
-const TwitterIcon = () => (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden="true">
-        <path d="M22 5.9c-.7.3-1.5.6-2.3.7.8-.5 1.5-1.300 1.800-2.200-.8.5-1.700.8-2.600 1a4.100 4.100 0 0 0-7 3.700A11.600 11.600 0 0 1 3.500 4.800a4.100 4.100 0 0 0 1.300 5.500c-.7 0-1.300-.2-1.900-.5 0 2 1.400 3.700 3.300 4.100-.6.2-1.200.2-1.800.1.500 1.600 2 2.800 3.800 2.900A8.200 8.200 0 0 1 2 18.600 11.600 11.600 0 0 0 8.300 20.400c7.500 0 11.700-6.300 11.700-11.700v-.5c.8-.6 1.500-1.300 2-2.100z" />
+const LinkedinIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+        <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z" />
     </svg>
 );
 
-const InstagramIcon = () => (
-    <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        className="size-4"
-        aria-hidden="true"
-    >
-        <rect x="3" y="3" width="18" height="18" rx="5" />
-        <circle cx="12" cy="12" r="4" />
-        <circle cx="17.500" cy="6.500" r="1" fill="currentColor" stroke="none" />
+const GithubIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+        <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.38 7.86 10.9.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.62 1.59.23 2.76.11 3.05.74.81 1.18 1.83 1.18 3.09 0 4.42-2.7 5.4-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z" />
     </svg>
 );
 
+/* links sora-sori ekhane */
 const socials = [
-    { label: "Facebook", href: "#", icon: FacebookIcon },
-    { label: "Twitter", href: "#", icon: TwitterIcon },
-    { label: "Instagram", href: "#", icon: InstagramIcon },
+    {
+        label: "Facebook",
+        href: "https://www.facebook.com/rahimsoftdev",
+        icon: FacebookIcon,
+        hover: "hover:bg-[#1877F2] hover:border-[#1877F2] hover:shadow-[#1877F2]/40",
+    },
+    {
+        label: "LinkedIn",
+        href: "https://www.linkedin.com/in/rahimsoftdev/",
+        icon: LinkedinIcon,
+        hover: "hover:bg-[#0A66C2] hover:border-[#0A66C2] hover:shadow-[#0A66C2]/40",
+    },
+    {
+        label: "GitHub",
+        href: "https://github.com/rahimsoftdev",
+        icon: GithubIcon,
+        hover: "hover:bg-[#24292F] hover:border-[#24292F] hover:shadow-black/30 dark:hover:bg-white dark:hover:border-white dark:hover:text-[#24292F]",
+    },
+    {
+        label: "Portfolio",
+        href: "https://rahimsoftdev.vercel.app",
+        icon: Globe,
+        hover: "hover:bg-primary hover:border-primary hover:shadow-primary/40",
+    },
 ];
 
 const linkGroups = [
@@ -40,7 +54,7 @@ const linkGroups = [
         links: [
             { label: "Home", to: "/" },
             { label: "Membership", to: "/#premium-benefits" },
-            { label: "How it works", to: "/#how-it-works" },
+            { label: "How it works", to: "#how-it-works" },
             { label: "Routes", to: "/#curated-travel" },
         ],
     },
@@ -64,7 +78,6 @@ export default function Footer() {
                         <Link
                             to="/"
                             className="flex flex-col  group focus:outline-none"
-
                         >
                             <svg
                                 width="38"
@@ -93,19 +106,25 @@ export default function Footer() {
                             Transforming travel demand into shared charter excellence.
                         </p>
 
-                        <ul className="flex items-center gap-4">
-                            {socials.map(({ label, href, icon: Icon }) => (
+                        <ul className="flex items-center gap-3">
+                            {socials.map(({ label, href, icon: Icon, hover }) => (
                                 <li key={label}>
-                                    <Link
-                                        to={href}
+                                    <a
+                                        href={href}
                                         aria-label={label}
+                                        title={label}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex size-8 items-center justify-center rounded-full text-primary
-                               transition-all duration-300 hover:bg-primary hover:text-white"
+                                        className={`group flex size-10 items-center justify-center rounded-full
+                                            border border-(--border-color) bg-(--card) text-(--paragraph-text)
+                                            transition-all duration-300 ease-out
+                                            hover:-translate-y-1 hover:text-white hover:shadow-lg
+                                            focus-visible:outline-2 focus-visible:outline-offset-2
+                                            focus-visible:outline-primary active:translate-y-0 active:scale-95
+                                            ${hover}`}
                                     >
-                                        <Icon />
-                                    </Link>
+                                        <Icon className="size-[18px] transition-transform duration-300 group-hover:scale-110" />
+                                    </a>
                                 </li>
                             ))}
                         </ul>

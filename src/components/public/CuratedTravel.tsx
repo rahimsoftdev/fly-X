@@ -1,7 +1,15 @@
 import { Link } from "react-router";
 import travelImg from "../../assets/images/travel.png";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export default function CuratedTravel() {
+  const { user, role } = useCurrentUser();
+
+  // login thakle /role e jabe, na thakle /register e
+  const isLoggedIn = !!user && !!role;
+  const ctaLink = isLoggedIn ? `/${role}` : "/register";
+  const ctaText = isLoggedIn ? "Dashboard" : "Become a Member";
+
   return (
     <section
       id="curated-travel"
@@ -19,7 +27,7 @@ export default function CuratedTravel() {
             </p>
 
             <Link
-              to="/register"
+              to={ctaLink}
               className="inline-flex items-center justify-center rounded-full bg-primary
                          px-5 py-2.5 text-sm font-medium text-white transition-all duration-300
                          hover:bg-secondary hover:shadow-lg hover:shadow-primary/20
@@ -27,7 +35,7 @@ export default function CuratedTravel() {
                          focus-visible:outline-primary active:scale-95
                          dark:hover:bg-primary/80"
             >
-              Become a Member
+              {ctaText}
             </Link>
           </div>
 
