@@ -1,19 +1,12 @@
-import React, { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router';
+import React, { useEffect, useState } from 'react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router';
 import { Menu, X, Sun, Moon, LogOut } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { toggleTheme } from '@/store/slices/themeSlice';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { logout } from '@/utils/auth.util';
-// import { getTokenData } from '@/utils/get.token.util';
-
 
 const Navbar: React.FC = () => {
-
-    // const token = getTokenData()
-    // console.log(token)
-
-
 
     //mobile device navbar open and close toggle state:
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -23,10 +16,17 @@ const Navbar: React.FC = () => {
     const dispatch = useAppDispatch();
 
     const navigate = useNavigate();
+    const { pathname, hash } = useLocation();
 
     //real session from better-auth (localStorage ar lage na):
     const { user, role, isPending } = useCurrentUser();
     const isAuthenticated = !!user;
+
+    //route change hole page er top e niye jabe (hash link thakle skip):
+    useEffect(() => {
+        if (hash) return;
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }, [pathname, hash]);
 
     //nav links:
     const navLinks = [
@@ -120,12 +120,13 @@ const Navbar: React.FC = () => {
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-[var(--border-color)] bg-[var(--background)]/95 backdrop-blur-md transition-colors duration-300">
-            <nav className="container-main flex h-20 items-center justify-between">
+            {/* Mobile: flex (logo left, controls right) | Desktop: 3 column grid, majher column always center */}
+            <nav className="container-main flex h-20 items-center justify-between lg:grid lg:grid-cols-[1fr_auto_1fr]">
 
                 {/* Left: Brand Logo (Flyx) */}
                 <Link
                     to="/"
-                    className="flex flex-col items-center justify-center group focus:outline-none"
+                    className="flex flex-col items-center justify-center group focus:outline-none lg:justify-self-start"
                     onClick={() => setIsMobileMenuOpen(false)}
                 >
                     <svg
@@ -150,12 +151,13 @@ const Navbar: React.FC = () => {
                     </span>
                 </Link>
 
-                {/* Center: Desktop & Laptop Navigation Links */}
-                <ul className="hidden lg:flex items-center gap-2 xl:gap-5">
+                {/* Center: Desktop & Laptop Navigation Links (always center) */}
+                <ul className="hidden lg:flex items-center justify-center gap-1 xl:gap-5">
                     {navLinks.map((link) => (
                         <li key={link.name}>
                             <NavLink
                                 to={link.path}
+                                end={link.path === '/'}
                                 className={({ isActive }) =>
                                     `px-4 py-2 rounded-lg text-[15px] font-medium transition-all duration-200 ${isActive
                                         ? 'bg-primary text-white shadow-sm'
@@ -170,7 +172,7 @@ const Navbar: React.FC = () => {
                 </ul>
 
                 {/* Right: Theme Toggle & Auth Buttons (Desktop & Laptop) */}
-                <div className="hidden lg:flex items-center gap-3">
+                <div className="hidden lg:flex items-center gap-3 lg:justify-self-end">
                     <button
                         type="button"
                         onClick={() => dispatch(toggleTheme())}
@@ -221,6 +223,7 @@ const Navbar: React.FC = () => {
                             <li key={link.name}>
                                 <NavLink
                                     to={link.path}
+                                    end={link.path === '/'}
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className={({ isActive }) =>
                                         `block w-full px-4 py-2.5 rounded-lg text-base font-medium transition-colors ${isActive
