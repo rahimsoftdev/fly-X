@@ -22,10 +22,10 @@ const FaqPage = () => {
             <CallToAction
                 image={homeCallActionImg}
                 imageAlt="image"
-                buttonLink="/register"
-                heading="Ready to Elevate Your Travel Experience?"
-                description="Join the exclusive network of executives and founders who have discovered a smarter way to fly private."
-                buttonText="Become a Member"
+                buttonLink="/contact"
+                heading="Still Have Questions"
+                description="See how Raven transforms the way you travel. Apply for membership today."
+                buttonText="Contact US"
                 isDark={true}
             />
         </div>

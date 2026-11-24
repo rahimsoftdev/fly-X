@@ -54,7 +54,7 @@ const linkGroups = [
         links: [
             { label: "Home", to: "/" },
             { label: "Membership", to: "/#premium-benefits" },
-            { label: "How it works", to: "#how-it-works" },
+            { label: "How it works", to: "/#how-it-works" },
             { label: "Routes", to: "/#curated-travel" },
         ],
     },

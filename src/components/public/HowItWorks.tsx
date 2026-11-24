@@ -38,7 +38,7 @@ export default function HowItWorks() {
     <section id="how-it-works" className="section-padding bg-(--background)">
       <div className="container-main">
         {/* Heading */}
-        <div className="mb-8 space-y-2 md:mb-10">
+        <div className="mb-4 space-y-2 md:mb-10">
           <p className="text-xs font-medium uppercase tracking-widest text-secondary dark:text-primary">
             The Process
           </p>

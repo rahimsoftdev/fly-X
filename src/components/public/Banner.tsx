@@ -60,7 +60,7 @@ const Banner = () => {
 
             {/* Content */}
             <div>
-              <h1 className="font-playfair text-[26px] font-medium leading-[1.2] tracking-tight text-[var(--heading-text)] sm:text-3xl md:text-[32px] lg:text-4xl">
+              <h1 className="font-playfair text-[26px] font-medium leading-[1.2] tracking-tight text-[var(--heading-text)] sm:text-3xl md:text-[32px] lg:text-[40px]">
                 Private Travel
                 <br />
                 Reimagined

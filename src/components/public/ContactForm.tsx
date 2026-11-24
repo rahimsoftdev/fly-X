@@ -76,7 +76,7 @@ export default function ContactForm() {
   return (
     <section
       id="contact-form"
-      className="pb-10 md:pb-12 xl:pb-section bg-[#ffffff] transition-colors duration-300 dark:bg-[#0B1220]"
+      className="pb-10 md:pb-12  bg-[#ffffff] transition-colors duration-300 dark:bg-[#0B1220] "
     >
       <div className="container-main">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-16">
