@@ -459,7 +459,7 @@ export default function ProfileSettingsPage() {
     <div className="min-h-dvh w-full bg-white text-gray-900 dark:bg-slate-900 dark:text-gray-50">
       {/* Header */}
       <header>
-        <h1 className="font-serif text-2xl font-medium sm:text-3xl">
+        <h1 className="font-serif text-2xl  sm:text-3xl font-bold">
           Profile Settings
         </h1>
         <p className="mt-1 text-xs text-gray-500 sm:text-sm dark:text-slate-400">

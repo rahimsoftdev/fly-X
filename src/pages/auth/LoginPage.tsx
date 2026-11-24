@@ -3,8 +3,10 @@ import { Link, Navigate, useNavigate } from "react-router";
 import FormField from "@/components/ui/FormField";
 import { login } from "@/utils/auth.util";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -56,15 +58,25 @@ export default function LoginPage() {
           value={email}
           onChange={(e) => { setEmail(e.target.value); setError(""); }}
         />
-        <FormField
-          id="login-password"
-          type="password"
-          label="Password"
-          required
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => { setPassword(e.target.value); setError(""); }}
-        />
+        <div className="relative">
+          <FormField
+            id="login-password"
+            type={showPassword ? "text" : "password"}
+            label="Password"
+            required
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => { setPassword(e.target.value); setError(""); }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((s) => !s)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            className="absolute bottom-3.5 right-3 cursor-pointer text-(--paragraph-text) hover:text-primary"
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
 
         {error && (
           <p role="alert" className="rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-500">
