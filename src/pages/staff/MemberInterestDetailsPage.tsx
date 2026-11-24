@@ -36,13 +36,64 @@ const MemberInterestDetailsPage = () => {
     [id]
   );
 
-  if (isLoading) {
-    return (
-      <div className="mx-auto w-full max-w-350 p-4 sm:p-5 lg:p-6">
-        <p className="text-sm text-(--paragraph-text)">Loading...</p>
-      </div>
-    );
-  }
+ if (isLoading) {
+  const bar = "animate-pulse rounded-md bg-(--border-color)/70";
+
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="mx-auto w-full"
+    >
+      {/* Back link */}
+      <div className={`mb-4 h-3.5 w-32 ${bar}`} />
+
+      {/* Member Details */}
+      <section className="rounded-xl border border-(--border-color) bg-(--background) p-4 sm:p-5">
+        <div className={`mb-4 h-5 w-36 ${bar}`} />
+        <div className="divide-y divide-(--border-color)/60">
+          {Array.from({ length: 7 }).map((_, i) => (
+            <div
+              key={i}
+              className="flex flex-col gap-1.5 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
+            >
+              <div className={`h-3 w-24 ${bar}`} />
+              <div className={`h-3 w-48 max-w-full ${bar}`} />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Passenger Information */}
+      <section className="mt-6">
+        <div className={`mb-3 h-4 w-40 ${bar}`} />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="rounded-xl border border-(--border-color) bg-(--background) p-4"
+            >
+              <div className={`h-3 w-20 ${bar}`} />
+              <div className={`mt-2.5 h-4 w-36 ${bar}`} />
+              <div className={`mt-2.5 h-3 w-full ${bar}`} />
+              <div className={`mt-2 h-3 w-4/5 ${bar}`} />
+              <div className={`mt-2 h-3 w-1/2 ${bar}`} />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Note */}
+      <section className="mt-6 rounded-xl border border-(--border-color) bg-(--background) p-4 sm:p-5">
+        <div className={`mb-3 h-4 w-16 ${bar}`} />
+        <div className={`h-3 w-full ${bar}`} />
+        <div className={`mt-2 h-3 w-2/3 ${bar}`} />
+      </section>
+
+      <span className="sr-only">Loading...</span>
+    </div>
+  );
+}
 
   if (error || !data) {
     return (

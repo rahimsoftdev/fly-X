@@ -108,7 +108,7 @@ const OpportunityCard = ({ opportunity, onReserved }: OpportunityCardProps) => {
             toggle();
           }
         }}
-        className={`group w-full min-w-0 cursor-pointer rounded-xl border bg-(--background) p-3 shadow-sm transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary min-[400px]:p-4 sm:p-5 ${isOpen
+        className={`group w-full min-w-0  rounded-xl border bg-(--background) p-3 shadow-sm transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary min-[400px]:p-4 sm:p-5 ${isOpen
             ? "border-primary shadow-md"
             : "border-(--border-color) hover:border-primary"
           }`}

@@ -54,9 +54,43 @@ const CustomTravelDayPage = () => {
       </div>
 
       {isLoading && !data && (
-        <p className="py-16 text-center text-sm text-(--paragraph-text)">
-          Loading...
-        </p>
+        <div role="status" aria-live="polite" className="space-y-6">
+          {/* Direction cards skeleton */}
+          <div className="grid gap-3 sm:grid-cols-2">
+            {[0, 1].map((i) => (
+              <div
+                key={i}
+                className="animate-pulse rounded-xl border border-(--border-color) p-4"
+              >
+                <div className="h-3 w-28 rounded bg-gray-200 dark:bg-slate-700" />
+                <div className="mt-3 h-7 w-12 rounded bg-gray-200 dark:bg-slate-700" />
+                <div className="mt-2 h-3 w-16 rounded bg-gray-200 dark:bg-slate-700" />
+              </div>
+            ))}
+          </div>
+
+          {/* Members list skeleton */}
+          <div className="space-y-3">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="flex animate-pulse flex-col gap-3 rounded-xl border border-(--border-color) p-4 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="space-y-2">
+                  <div className="h-4 w-40 rounded bg-gray-200 dark:bg-slate-700" />
+                  <div className="h-3 w-52 rounded bg-gray-200 dark:bg-slate-700" />
+                  <div className="h-3 w-64 rounded bg-gray-200 dark:bg-slate-700" />
+                </div>
+                <div className="flex gap-2">
+                  <div className="h-9 w-28 rounded-full bg-gray-200 dark:bg-slate-700" />
+                  <div className="h-9 w-24 rounded-full bg-gray-200 dark:bg-slate-700" />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <span className="sr-only">Loading...</span>
+        </div>
       )}
 
       {error && (
@@ -135,7 +169,7 @@ const CustomTravelDayPage = () => {
                   {/* Message feature পরে করা হবে */}
                   <button
                     type="button"
-                    disabled
+                    
                     title="Coming soon"
                     className="flex-1 rounded-full bg-secondary px-5 py-2 text-sm font-medium text-white opacity-60 sm:flex-none"
                   >

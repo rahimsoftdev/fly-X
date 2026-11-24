@@ -10,7 +10,7 @@ interface OpportunityFiltersProps {
 }
 
 const selectClass =
-  "h-10 w-full rounded-lg border border-(--border-color) bg-(--background) px-3 text-sm text-(--foreground) outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20";
+  "h-10 w-full rounded-lg cursor-pointer border border-(--border-color) bg-(--background) px-3 text-sm text-(--foreground) outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20";
 
 const OpportunityFilters = ({
   status,
@@ -25,7 +25,7 @@ const OpportunityFilters = ({
         value={status}
         onChange={(e) => onChange("status", e.target.value)}
       >
-        <option value="open">Open</option>
+        <option className="" value="open">Open</option>
         <option value="confirmed">Confirmed</option>
         <option value="completed">Completed</option>
       </select>

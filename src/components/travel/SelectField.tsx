@@ -32,13 +32,13 @@ export default function SelectField({
         {label}
       </label>
 
-      <div className="relative">
+      <div className="relative ">
         <select
           id={id}
           value={value}
           disabled={disabled}
           onChange={(e) => onChange(e.target.value)}
-          className={`${inputBase} appearance-none pr-9 ${
+          className={`${inputBase} appearance-none pr-9 cursor-pointer ${
             value ? "text-(--heading-text)" : "text-slate-400"
           }`}
         >

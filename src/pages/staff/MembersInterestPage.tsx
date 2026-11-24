@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router";
 import {
   AlertCircle,
   CheckCircle2,
@@ -99,13 +99,17 @@ const StatCard = ({
   value,
   icon,
   tone,
+  className = "",
 }: {
   label: string;
   value: number;
   icon: React.ReactNode;
   tone: string;
+  className?: string;
 }) => (
-  <div className="flex items-center gap-3 rounded-xl border border-(--border-color) bg-(--background) p-3 shadow-sm sm:p-4">
+  <div
+    className={`flex min-w-0 items-center gap-3 rounded-xl border border-(--border-color) bg-(--background) p-3 shadow-sm sm:p-4 ${className}`}
+  >
     <div
       className={`flex size-10 shrink-0 items-center justify-center rounded-lg ${tone}`}
     >
@@ -139,11 +143,13 @@ const Toast = ({ toast }: { toast: ToastState }) => {
 /* ---------- Skeletons ---------- */
 
 const StatsSkeleton = () => (
-  <div className="mb-5 grid grid-cols-3 gap-3 sm:gap-4">
+  <div className="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
     {[0, 1, 2].map((i) => (
       <div
         key={i}
-        className="flex items-center gap-3 rounded-xl border border-(--border-color) bg-(--background) p-3 sm:p-4"
+        className={`flex items-center gap-3 rounded-xl border border-(--border-color) bg-(--background) p-3 sm:p-4 ${
+          i === 0 ? "col-span-2 sm:col-span-1" : ""
+        }`}
       >
         <Skeleton className="size-10 shrink-0 rounded-lg" />
         <div className="flex-1 space-y-2">
@@ -156,7 +162,7 @@ const StatsSkeleton = () => (
 );
 
 const TableSkeleton = () => (
-  <div className="hidden overflow-hidden rounded-xl border border-(--border-color) bg-(--background) lg:block">
+  <div className="hidden overflow-hidden rounded-xl border border-(--border-color) bg-(--background) xl:block">
     <div className="flex gap-4 border-b border-(--border-color) px-4 py-3">
       {[28, 20, 18, 12, 10, 10, 6].map((w, i) => (
         <Skeleton key={i} className="h-3" style={{ width: `${w}%` }} />
@@ -186,7 +192,7 @@ const TableSkeleton = () => (
 );
 
 const CardsSkeleton = () => (
-  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden">
+  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:hidden">
     {Array.from({ length: 4 }).map((_, i) => (
       <div
         key={i}
@@ -218,6 +224,7 @@ const CardsSkeleton = () => (
 
 const MembersInterestPage = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { data, isLoading, error, refetch } = useFetch(
     (signal) => getAllCustomTravels(signal),
@@ -229,15 +236,41 @@ const MembersInterestPage = () => {
   const [removedIds, setRemovedIds] = useState<string[]>([]);
   const [pendingIds, setPendingIds] = useState<string[]>([]);
 
-  const [direction, setDirection] = useState("all");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const [page, setPage] = useState(1);
-
   const [toast, setToast] = useState<ToastState>(null);
   const [deleteTarget, setDeleteTarget] = useState<CustomTravelRequest | null>(
     null
   );
   const [deleting, setDeleting] = useState(false);
+
+  /* ---------- Filter / page এখন URL query params থেকে ---------- */
+  // ?direction=NYC → DAC&status=confirmed&page=2
+  const direction = searchParams.get("direction") ?? "all";
+
+  const rawStatus = searchParams.get("status");
+  const statusFilter: StatusFilter =
+    rawStatus === "interested" || rawStatus === "confirmed"
+      ? rawStatus
+      : "all";
+
+  const page = Math.max(1, Math.floor(Number(searchParams.get("page"))) || 1);
+
+  // null দিলে ওই param URL থেকে মুছে যায় (default মান URL এ রাখা হয় না)
+  const updateParams = (updates: Record<string, string | null>) => {
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        Object.entries(updates).forEach(([key, value]) => {
+          if (value === null) next.delete(key);
+          else next.set(key, value);
+        });
+        return next;
+      },
+      { replace: true }
+    );
+  };
+
+  const setPage = (p: number) =>
+    updateParams({ page: p <= 1 ? null : String(p) });
 
   // Toast ২.৫ সেকেন্ড পরে নিজে থেকে চলে যাবে
   useEffect(() => {
@@ -249,41 +282,26 @@ const MembersInterestPage = () => {
   // শুধু একদম প্রথমবার লোডে skeleton, পরে আর না
   const showSkeleton = isLoading && data === null;
 
-  const items = useMemo(
-    () =>
-      (data ?? [])
-        .filter((i) => !removedIds.includes(i._id))
-        .map((i) =>
-          overrides[i._id] ? { ...i, status: overrides[i._id] } : i
-        ),
-    [data, overrides, removedIds]
+  const items = (data ?? [])
+    .filter((i) => !removedIds.includes(i._id))
+    .map((i) => (overrides[i._id] ? { ...i, status: overrides[i._id] } : i));
+
+  const counts = {
+    total: items.length,
+    interested: items.filter((i) => i.status === "interested").length,
+    confirmed: items.filter((i) => i.status === "confirmed").length,
+  };
+
+  const directionOptions = Array.from(
+    new Set(items.map((i) => `${i.origin} → ${i.destination}`))
   );
 
-  const counts = useMemo(
-    () => ({
-      total: items.length,
-      interested: items.filter((i) => i.status === "interested").length,
-      confirmed: items.filter((i) => i.status === "confirmed").length,
-    }),
-    [items]
-  );
-
-  const directionOptions = useMemo(
-    () => Array.from(new Set(items.map((i) => `${i.origin} → ${i.destination}`))),
-    [items]
-  );
-
-  const filtered = useMemo(
-    () =>
-      items.filter((i) => {
-        const dirOk =
-          direction === "all" ||
-          `${i.origin} → ${i.destination}` === direction;
-        const statusOk = statusFilter === "all" || i.status === statusFilter;
-        return dirOk && statusOk;
-      }),
-    [items, direction, statusFilter]
-  );
+  const filtered = items.filter((i) => {
+    const dirOk =
+      direction === "all" || `${i.origin} → ${i.destination}` === direction;
+    const statusOk = statusFilter === "all" || i.status === statusFilter;
+    return dirOk && statusOk;
+  });
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
@@ -357,16 +375,18 @@ const MembersInterestPage = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-(--paragraph-text)">
+        <div className="flex w-full items-center gap-2 text-sm text-(--paragraph-text) sm:w-auto">
           <Filter size={16} className="shrink-0" />
           <span>Filter:</span>
           <select
             value={direction}
-            onChange={(e) => {
-              setDirection(e.target.value);
-              setPage(1);
-            }}
-            className="min-w-0 flex-1 rounded-lg border border-(--border-color) bg-(--background) px-3 py-1.5 text-xs text-(--foreground) outline-none focus:border-primary sm:flex-none"
+            onChange={(e) =>
+              updateParams({
+                direction: e.target.value === "all" ? null : e.target.value,
+                page: null,
+              })
+            }
+            className="min-w-0 cursor-pointer flex-1 rounded-lg border border-(--border-color) bg-(--background) px-3 py-1.5 text-xs text-(--foreground) outline-none focus:border-primary sm:flex-none"
           >
             <option value="all">All Direction</option>
             {directionOptions.map((d) => (
@@ -383,8 +403,10 @@ const MembersInterestPage = () => {
         <StatsSkeleton />
       ) : (
         !error && (
-          <div className="mb-5 grid grid-cols-3 gap-3 sm:gap-4">
+          // মোবাইলে Total উপরে full width, নিচে Interested ও Confirmed পাশাপাশি; sm থেকে ৩টা এক সারিতে
+          <div className="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
             <StatCard
+              className="col-span-2 sm:col-span-1"
               label="Total"
               value={counts.total}
               icon={<Users size={18} className="text-primary" />}
@@ -415,10 +437,12 @@ const MembersInterestPage = () => {
               <button
                 key={c.key}
                 type="button"
-                onClick={() => {
-                  setStatusFilter(c.key);
-                  setPage(1);
-                }}
+                onClick={() =>
+                  updateParams({
+                    status: c.key === "all" ? null : c.key,
+                    page: null,
+                  })
+                }
                 className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${active
                     ? "border-primary bg-primary text-white"
                     : "border-(--border-color) bg-(--background) text-(--paragraph-text) hover:border-primary hover:text-primary"
@@ -477,9 +501,9 @@ const MembersInterestPage = () => {
       {!showSkeleton && !error && pageItems.length > 0 && (
         <>
           {/* ===== Laptop / Desktop: Table ===== */}
-          <div className="hidden rounded-xl border border-(--border-color) bg-(--background) shadow-sm lg:block">
+          <div className="hidden rounded-xl border border-(--border-color) bg-(--background) shadow-sm xl:block">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+              <table className="w-full min-w-[860px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-(--border-color) bg-(--card) text-xs text-(--paragraph-text)">
                     <th className="rounded-tl-xl px-4 py-3 font-medium">
@@ -556,7 +580,7 @@ const MembersInterestPage = () => {
           </div>
 
           {/* ===== Mobile / Tablet: Cards ===== */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:hidden">
             {pageItems.map((item) => {
               const pending = pendingIds.includes(item._id);
               const name = getMemberName(item);

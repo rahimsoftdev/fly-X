@@ -25,11 +25,17 @@ const TABS: { value: TravelType; label: string }[] = [
   { value: "one-time", label: "One-Time Travel Requests" },
 ];
 
+// Table column width (%) — table-fixed, তাই horizontal scroll আসবে না
+const COLS = [30, 20, 18, 16, 16];
+
 const selectClass =
-  "min-w-0 flex-1 rounded-lg border border-(--border-color) bg-(--background) px-3 py-2 text-sm text-(--heading-text) outline-none focus:border-primary sm:flex-none";
+  "w-full min-w-0 truncate rounded-lg border border-(--border-color) bg-(--background) px-3 py-2 text-sm text-(--heading-text) outline-none focus:border-primary sm:w-auto sm:min-w-40 sm:max-w-64 sm:flex-none";
 
 const RoutePill = ({ route }: { route: string }) => (
-  <span className="inline-block rounded-full bg-secondary px-3 py-1.5 text-xs font-medium text-white">
+  <span
+    title={route}
+    className="inline-block max-w-full break-words rounded-full bg-secondary px-3 py-1.5 text-xs font-medium leading-snug text-white md:truncate"
+  >
     {route}
   </span>
 );
@@ -66,7 +72,7 @@ const ConfirmModal = ({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-black/50 p-3 sm:p-4"
       onClick={() => {
         if (!loading) onCancel();
       }}
@@ -75,19 +81,21 @@ const ConfirmModal = ({
         role="dialog"
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-sm rounded-2xl border border-(--border-color) bg-(--background) p-5 shadow-xl sm:p-6"
+        className="my-auto max-h-[90vh] w-full max-w-[calc(100vw-1.5rem)] overflow-y-auto rounded-2xl border border-(--border-color) bg-(--background) p-4 shadow-xl sm:max-w-sm sm:p-6"
       >
-        <h3 className="text-base font-semibold text-(--heading-text) sm:text-lg">
+        <h3 className="break-words text-base font-semibold text-(--heading-text) sm:text-lg">
           {title}
         </h3>
-        <p className="mt-2 text-sm text-(--paragraph-text)">{message}</p>
+        <p className="mt-2 break-words text-sm text-(--paragraph-text)">
+          {message}
+        </p>
 
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:flex sm:justify-end">
+        <div className="mt-5 grid grid-cols-2 gap-2 sm:mt-6 sm:flex sm:justify-end sm:gap-3">
           <button
             type="button"
             disabled={loading}
             onClick={onCancel}
-            className="rounded-full border border-(--border-color) px-5 py-2 text-sm font-medium text-(--heading-text) transition hover:bg-(--card) disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-full border border-(--border-color) px-4 py-2 text-sm font-medium text-(--heading-text) transition hover:bg-(--card) disabled:cursor-not-allowed disabled:opacity-50 sm:px-5"
           >
             Cancel
           </button>
@@ -95,7 +103,7 @@ const ConfirmModal = ({
             type="button"
             disabled={loading}
             onClick={onConfirm}
-            className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60 sm:px-5"
           >
             {loading ? "Please wait..." : confirmLabel}
           </button>
@@ -179,13 +187,13 @@ const TravelManagementPage = () => {
   const hasNext = !!meta && meta.page < meta.totalPages;
 
   return (
-    <div className="space-y-6">
+    <div className="w-full min-w-0 space-y-4 sm:space-y-5 lg:space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-(--heading-text) sm:text-3xl">
+      <div className="min-w-0">
+        <h1 className="break-words text-lg font-bold leading-tight text-(--heading-text) min-[400px]:text-xl sm:text-2xl lg:text-3xl">
           Recurring Travel Management
         </h1>
-        <p className="text-sm text-(--paragraph-text)">
+        <p className="mt-1 text-xs text-(--paragraph-text) sm:text-sm">
           Monitor and coordinate recurring member travel preferences to
           identify demand patterns and optimize shared charter opportunities.
         </p>
@@ -193,14 +201,15 @@ const TravelManagementPage = () => {
 
       {/* Tabs + Filters */}
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div className="overflow-x-auto">
-          <div className="inline-flex gap-1 rounded-full bg-blue-50 p-1 dark:bg-blue-500/10">
+        {/* Tabs: মোবাইলে পুরো width এ 2 কলাম, sm থেকে inline */}
+        <div className="w-full sm:w-auto">
+          <div className="grid w-full grid-cols-2 gap-1 rounded-2xl bg-blue-50 p-1 sm:inline-flex sm:w-auto sm:rounded-full dark:bg-blue-500/10">
             {TABS.map((tab) => (
               <button
                 key={tab.value}
                 type="button"
                 onClick={() => changeTab(tab.value)}
-                className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition ${
+                className={`rounded-xl px-2 py-2 text-center text-xs font-medium leading-tight transition min-[400px]:text-sm sm:rounded-full sm:whitespace-nowrap sm:px-4 ${
                   type === tab.value
                     ? "bg-primary text-white shadow"
                     : "text-(--paragraph-text) hover:text-(--heading-text)"
@@ -212,63 +221,74 @@ const TravelManagementPage = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <Filter size={16} className="text-(--paragraph-text)" />
-          <span className="text-sm text-(--paragraph-text)">Filter:</span>
-          <select
-            value={direction}
-            onChange={(e) => {
-              setDirection(e.target.value);
-              setPage(1);
-            }}
-            className={selectClass}
-          >
-            <option value="">All Direction</option>
-            {(directions ?? []).map((d) => (
-              <option
-                key={`${d.origin}|${d.destination}`}
-                value={`${d.origin}|${d.destination}`}
-              >
-                {formatTravelRoute(d.origin, d.destination)}
-              </option>
-            ))}
-          </select>
-          <select
-            value={status}
-            onChange={(e) => {
-              setStatus(e.target.value as "" | TravelStatus);
-              setPage(1);
-            }}
-            className={selectClass}
-          >
-            <option value="">All Status</option>
-            {TRAVEL_STATUSES.map((s) => (
-              <option key={s} value={s}>
-                {capitalize(s)}
-              </option>
-            ))}
-          </select>
+        <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center lg:w-auto lg:flex-nowrap">
+          <div className="flex shrink-0 items-center gap-2">
+            <Filter size={16} className="text-(--paragraph-text)" />
+            <span className="text-sm text-(--paragraph-text)">Filter:</span>
+          </div>
+          <div className="grid w-full min-w-0 grid-cols-1 gap-2 min-[480px]:grid-cols-2 sm:flex sm:w-auto sm:flex-wrap">
+            <select
+              value={direction}
+              onChange={(e) => {
+                setDirection(e.target.value);
+                setPage(1);
+              }}
+              aria-label="Filter by direction"
+              className={selectClass}
+            >
+              <option value="">All Direction</option>
+              {(directions ?? []).map((d) => (
+                <option
+                  key={`${d.origin}|${d.destination}`}
+                  value={`${d.origin}|${d.destination}`}
+                >
+                  {formatTravelRoute(d.origin, d.destination)}
+                </option>
+              ))}
+            </select>
+            <select
+              value={status}
+              onChange={(e) => {
+                setStatus(e.target.value as "" | TravelStatus);
+                setPage(1);
+              }}
+              aria-label="Filter by status"
+              className={selectClass}
+            >
+              <option value="">All Status</option>
+              {TRAVEL_STATUSES.map((s) => (
+                <option key={s} value={s}>
+                  {capitalize(s)}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
       {(error || actionError) && (
-        <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600 dark:bg-red-500/10">
+        <p className="break-words rounded-lg bg-red-50 px-3 py-3 text-sm text-red-600 sm:px-4 dark:bg-red-500/10">
           {error ?? actionError}
         </p>
       )}
 
       {/* Table (md+) */}
       <div className="hidden md:block">
-        <table className="w-full text-left text-sm">
+        <table className="w-full table-fixed text-left text-sm">
+          <colgroup>
+            {COLS.map((w, i) => (
+              <col key={i} style={{ width: `${w}%` }} />
+            ))}
+          </colgroup>
           <thead>
             <tr className="border-b border-(--border-color) text-xs font-medium text-(--paragraph-text)">
-              <th className="px-3 py-3">Route</th>
-              <th className="px-3 py-3">
+              <th className="px-2 py-3 lg:px-3">Route</th>
+              <th className="px-2 py-3 lg:px-3">
                 {isOneTime ? "Date" : "Day Of Week"}
               </th>
-              <th className="px-3 py-3">Preferred Time</th>
-              <th className="px-3 py-3">Status</th>
-              <th className="px-3 py-3 text-right">Action</th>
+              <th className="px-2 py-3 lg:px-3">Preferred Time</th>
+              <th className="px-2 py-3 lg:px-3">Status</th>
+              <th className="px-2 py-3 text-right lg:px-3">Action</th>
             </tr>
           </thead>
           <tbody className={isLoading ? "opacity-60" : ""}>
@@ -277,27 +297,32 @@ const TravelManagementPage = () => {
                 key={item._id}
                 className="border-b border-(--border-color) text-(--heading-text)"
               >
-                <td className="px-3 py-4">
+                <td className="px-2 py-4 lg:px-3">
                   <RoutePill
                     route={formatTravelRoute(item.origin, item.destination)}
                   />
                 </td>
-                <td className="whitespace-nowrap px-3 py-4">
+                <td className="break-words px-2 py-4 lg:px-3">
                   {isOneTime
                     ? formatMediumDate(item.date)
                     : capitalize(item.dayOfWeek)}
                 </td>
-                <td className="px-3 py-4">{capitalize(item.preferredTime)}</td>
-                <td className="px-3 py-4">
+                <td className="break-words px-2 py-4 lg:px-3">
+                  {capitalize(item.preferredTime)}
+                </td>
+                <td className="px-2 py-4 lg:px-3">
                   <TravelStatusBadge status={item.status} />
                 </td>
-                <td className="px-3 py-2 text-right">
-                  <TravelRowActions
-                    travel={item}
-                    disabled={busy}
-                    onViewDetails={setDetailsId}
-                    onChangeStatus={handleChangeStatus}
-                  />
+                <td className="px-2 py-2 text-right lg:px-3">
+                  {/* text-left: td এর text-right যেন dropdown menu এর ভেতরে না যায় */}
+                  <div className="flex justify-end text-left">
+                    <TravelRowActions
+                      travel={item}
+                      disabled={busy}
+                      onViewDetails={setDetailsId}
+                      onChangeStatus={handleChangeStatus}
+                    />
+                  </div>
                 </td>
               </tr>
             ))}
@@ -306,14 +331,18 @@ const TravelManagementPage = () => {
       </div>
 
       {/* Cards (mobile) */}
-      <div className={`space-y-3 md:hidden ${isLoading ? "opacity-60" : ""}`}>
+      <div
+        className={`grid gap-3 sm:grid-cols-2 sm:gap-4 md:hidden ${
+          isLoading ? "opacity-60" : ""
+        }`}
+      >
         {items.map((item) => (
           <div
             key={item._id}
-            className="rounded-xl border border-(--border-color) p-4"
+            className="min-w-0 rounded-xl border border-(--border-color) p-3 sm:p-4"
           >
             <div className="flex items-start justify-between gap-3">
-              <div className="space-y-2">
+              <div className="min-w-0 flex-1 space-y-2">
                 <RoutePill
                   route={formatTravelRoute(item.origin, item.destination)}
                 />
@@ -321,28 +350,30 @@ const TravelManagementPage = () => {
                   <TravelStatusBadge status={item.status} />
                 </div>
               </div>
-              <TravelRowActions
-                travel={item}
-                disabled={busy}
-                onViewDetails={setDetailsId}
-                onChangeStatus={handleChangeStatus}
-              />
+              <div className="shrink-0 text-left">
+                <TravelRowActions
+                  travel={item}
+                  disabled={busy}
+                  onViewDetails={setDetailsId}
+                  onChangeStatus={handleChangeStatus}
+                />
+              </div>
             </div>
 
             <dl className="mt-4 grid grid-cols-2 gap-3 text-xs">
-              <div>
+              <div className="min-w-0">
                 <dt className="text-(--paragraph-text)">
                   {isOneTime ? "Date" : "Day Of Week"}
                 </dt>
-                <dd className="font-medium text-(--heading-text)">
+                <dd className="break-words font-medium text-(--heading-text)">
                   {isOneTime
                     ? formatMediumDate(item.date)
                     : capitalize(item.dayOfWeek)}
                 </dd>
               </div>
-              <div>
+              <div className="min-w-0">
                 <dt className="text-(--paragraph-text)">Preferred Time</dt>
-                <dd className="font-medium text-(--heading-text)">
+                <dd className="break-words font-medium text-(--heading-text)">
                   {capitalize(item.preferredTime)}
                 </dd>
               </div>
@@ -352,13 +383,13 @@ const TravelManagementPage = () => {
       </div>
 
       {isLoading && !data && (
-        <p className="py-12 text-center text-sm text-(--paragraph-text)">
+        <p className="py-10 text-center text-sm text-(--paragraph-text) sm:py-12">
           Loading...
         </p>
       )}
 
       {!isLoading && !error && items.length === 0 && (
-        <p className="py-12 text-center text-sm text-(--paragraph-text)">
+        <p className="py-10 text-center text-sm text-(--paragraph-text) sm:py-12">
           No travel preferences found.
         </p>
       )}
@@ -366,15 +397,15 @@ const TravelManagementPage = () => {
       {/* Pagination */}
       {meta && meta.total > 0 && (
         <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
-          <p className="text-sm text-primary">
+          <p className="text-center text-xs text-primary sm:text-left sm:text-sm">
             Showing {from} to {to} of {meta.total} results
           </p>
-          <div className="flex gap-2">
+          <div className="flex w-full gap-2 sm:w-auto">
             <button
               type="button"
               disabled={!hasPrev || isLoading}
               onClick={() => setPage((p) => p - 1)}
-              className="rounded-full border border-primary px-5 py-2 text-sm font-medium text-primary transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex-1 rounded-full border border-primary px-4 py-2 text-sm font-medium text-primary transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-40 sm:flex-none sm:px-5"
             >
               Previous
             </button>
@@ -382,7 +413,7 @@ const TravelManagementPage = () => {
               type="button"
               disabled={!hasNext || isLoading}
               onClick={() => setPage((p) => p + 1)}
-              className="rounded-full border border-primary px-5 py-2 text-sm font-medium text-primary transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex-1 rounded-full border border-primary px-4 py-2 text-sm font-medium text-primary transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-40 sm:flex-none sm:px-5"
             >
               Next
             </button>

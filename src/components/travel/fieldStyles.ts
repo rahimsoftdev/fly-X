@@ -11,6 +11,6 @@ export const inputBase =
 export const inputClass = `${inputBase} text-(--heading-text)`;
 
 export const addButtonClass =
-  "flex w-full items-center justify-center gap-2 rounded-lg border border-(--border-color) bg-(--card) py-2.5 text-sm font-medium text-(--heading-text) transition hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-white/5";
+  "flex w-full items-center cursor-pointer justify-center gap-2 rounded-lg border border-(--border-color) bg-(--card) py-2.5 text-sm font-medium text-(--heading-text) transition hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-white/5";
 
 export const errorTextClass = "text-sm text-red-600 dark:text-red-400";
