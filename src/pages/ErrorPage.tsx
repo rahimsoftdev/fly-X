@@ -1,4 +1,4 @@
-import { Link, isRouteErrorResponse, useRouteError } from "react-router";
+import {  isRouteErrorResponse, useRouteError } from "react-router";
 import { Home, Plane, RotateCw, TriangleAlert } from "lucide-react";
 
 type ErrorPageProps = {
