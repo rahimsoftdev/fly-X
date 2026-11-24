@@ -8,6 +8,19 @@ import { logout } from '@/utils/auth.util';
 
 type NavItem = { label: string; path: string; icon: LucideIcon };
 
+// sidebar collapse state localStorage e ei key te save hobe
+const SIDEBAR_COLLAPSED_KEY = 'dashboard-sidebar-collapsed';
+
+// localStorage theke collapse state pori (na thakle / error hole default: false = uncollapsed)
+const getInitialCollapsed = (): boolean => {
+    if (typeof window === 'undefined') return false;
+    try {
+        return window.localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === 'true';
+    } catch {
+        return false;
+    }
+};
+
 // sidebar e jei field gula lage
 type SidebarUser = {
     name?: string | null;
@@ -189,7 +202,16 @@ const DashboardSidebar = () => {
     const { user: currentUser, role } = useCurrentUser();
 
     const [mobileOpen, setMobileOpen] = useState(false); // choto device drawer
-    const [collapsed, setCollapsed] = useState(false); // boro device icon-only mode
+    const [collapsed, setCollapsed] = useState<boolean>(getInitialCollapsed); // boro device icon-only mode (localStorage theke ashe)
+
+    // collapsed change hole localStorage e save
+    useEffect(() => {
+        try {
+            window.localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(collapsed));
+        } catch {
+            // storage block thakle ignore
+        }
+    }, [collapsed]);
 
     // link role onujayi
     const links: NavItem[] =
