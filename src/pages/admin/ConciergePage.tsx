@@ -62,6 +62,58 @@ const deleteStaff = async (id: string): Promise<void> => {
   await api.delete(`/users/staff/${id}`);
 };
 
+/* ---------------- Loading skeleton ---------------- */
+const Bone = ({ className = "" }: { className?: string }) => (
+  <div className={`animate-pulse rounded-md bg-(--card) ${className}`} />
+);
+
+const StaffSkeleton = ({ rows = LIMIT }: { rows?: number }) => (
+  <>
+    {/* Table skeleton (md+) */}
+    <div className="hidden rounded-xl border border-(--border-color) md:block">
+      <div className="flex items-center gap-4 border-b border-(--border-color) px-4 py-3">
+        <Bone className="h-3 w-[30%]" />
+        <Bone className="h-3 w-[25%]" />
+        <Bone className="h-3 w-[35%]" />
+        <Bone className="ml-auto h-3 w-[6%]" />
+      </div>
+      {Array.from({ length: rows }).map((_, i) => (
+        <div
+          key={i}
+          className="flex items-center gap-4 border-b border-(--border-color) px-4 py-4 last:border-b-0"
+        >
+          <Bone className="h-4 w-[30%]" />
+          <Bone className="h-4 w-[25%]" />
+          <Bone className="h-4 w-[35%]" />
+          <Bone className="ml-auto h-8 w-8 rounded-full" />
+        </div>
+      ))}
+    </div>
+
+    {/* Card skeleton (mobile) */}
+    <div className="space-y-3 md:hidden">
+      {Array.from({ length: Math.min(rows, 5) }).map((_, i) => (
+        <div
+          key={i}
+          className="rounded-xl border border-(--border-color) p-4"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="w-full space-y-2">
+              <Bone className="h-4 w-1/2" />
+              <Bone className="h-3 w-1/3" />
+            </div>
+            <Bone className="h-9 w-9 shrink-0 rounded-full" />
+          </div>
+          <div className="mt-4 space-y-2 border-t border-(--border-color) pt-4">
+            <Bone className="h-3 w-1/5" />
+            <Bone className="h-3 w-4/5" />
+          </div>
+        </div>
+      ))}
+    </div>
+  </>
+);
+
 /* ---------------- Delete button ---------------- */
 const DeleteButton = ({
   onClick,
@@ -347,6 +399,9 @@ const ConciergePage = () => {
   const items = data?.items ?? [];
   const meta = data?.meta;
 
+  // প্রথমবার load হওয়ার সময় skeleton দেখাবে, তখন আসল table/card লুকানো থাকবে
+  const isInitialLoading = isLoading && !data;
+
   const from = meta && meta.total > 0 ? (meta.page - 1) * meta.limit + 1 : 0;
   const to = meta ? Math.min(meta.page * meta.limit, meta.total) : 0;
 
@@ -419,78 +474,79 @@ const ConciergePage = () => {
         </p>
       )}
 
+      {/* Skeleton (প্রথমবার loading) */}
+      {isInitialLoading && <StaffSkeleton />}
+
       {/* Table (md+) */}
-      <div className="hidden rounded-xl border border-(--border-color) md:block">
-        <table className="w-full table-fixed text-left text-sm">
-          <thead>
-            <tr className="border-b border-(--border-color) text-xs font-medium text-(--paragraph-text)">
-              <th className="w-[30%] px-4 py-3">Name</th>
-              <th className="w-[25%] px-4 py-3">Phone Number</th>
-              <th className="w-[35%] px-4 py-3">Email</th>
-              <th className="w-[10%] px-4 py-3 text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody className={isLoading ? "opacity-60" : ""}>
-            {items.map((s) => (
-              <tr
-                key={s.id}
-                className="border-b border-(--border-color) align-middle text-(--heading-text) last:border-b-0"
-              >
-                <td className="break-words px-4 py-4 font-medium">{s.name}</td>
-                <td className="whitespace-nowrap px-4 py-4">{s.phone}</td>
-                <td className="break-all px-4 py-4">{s.email}</td>
-                <td className="px-4 py-2 text-right">
-                  <div className="flex justify-end">
-                    <DeleteButton
-                      onClick={() => askDelete(s)}
-                      disabled={deleting}
-                    />
-                  </div>
-                </td>
+      {!isInitialLoading && (
+        <div className="hidden rounded-xl border border-(--border-color) md:block">
+          <table className="w-full table-fixed text-left text-sm">
+            <thead>
+              <tr className="border-b border-(--border-color) text-xs font-medium text-(--paragraph-text)">
+                <th className="w-[30%] px-4 py-3">Name</th>
+                <th className="w-[25%] px-4 py-3">Phone Number</th>
+                <th className="w-[35%] px-4 py-3">Email</th>
+                <th className="w-[10%] px-4 py-3 text-right">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className={isLoading ? "opacity-60" : ""}>
+              {items.map((s) => (
+                <tr
+                  key={s.id}
+                  className="border-b border-(--border-color) align-middle text-(--heading-text) last:border-b-0"
+                >
+                  <td className="break-words px-4 py-4 font-medium">{s.name}</td>
+                  <td className="whitespace-nowrap px-4 py-4">{s.phone}</td>
+                  <td className="break-all px-4 py-4">{s.email}</td>
+                  <td className="px-4 py-2 text-right">
+                    <div className="flex justify-end">
+                      <DeleteButton
+                        onClick={() => askDelete(s)}
+                        disabled={deleting}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* Cards (mobile) */}
-      <div className={`space-y-3 md:hidden ${isLoading ? "opacity-60" : ""}`}>
-        {items.map((s) => (
-          <div
-            key={s.id}
-            className="rounded-xl border border-(--border-color) p-4"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-(--heading-text)">
-                  {s.name}
-                </p>
-                <p className="mt-0.5 text-xs text-(--paragraph-text)">
-                  {s.phone}
+      {!isInitialLoading && (
+        <div className={`space-y-3 md:hidden ${isLoading ? "opacity-60" : ""}`}>
+          {items.map((s) => (
+            <div
+              key={s.id}
+              className="rounded-xl border border-(--border-color) p-4"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-(--heading-text)">
+                    {s.name}
+                  </p>
+                  <p className="mt-0.5 text-xs text-(--paragraph-text)">
+                    {s.phone}
+                  </p>
+                </div>
+                <div className="shrink-0">
+                  <DeleteButton
+                    onClick={() => askDelete(s)}
+                    disabled={deleting}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-4 border-t border-(--border-color) pt-4 text-xs">
+                <p className="text-(--paragraph-text)">Email</p>
+                <p className="mt-0.5 break-all font-medium text-(--heading-text)">
+                  {s.email}
                 </p>
               </div>
-              <div className="shrink-0">
-                <DeleteButton
-                  onClick={() => askDelete(s)}
-                  disabled={deleting}
-                />
-              </div>
             </div>
-
-            <div className="mt-4 border-t border-(--border-color) pt-4 text-xs">
-              <p className="text-(--paragraph-text)">Email</p>
-              <p className="mt-0.5 break-all font-medium text-(--heading-text)">
-                {s.email}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {isLoading && !data && (
-        <p className="py-12 text-center text-sm text-(--paragraph-text)">
-          Loading...
-        </p>
+          ))}
+        </div>
       )}
 
       {!isLoading && !error && items.length === 0 && (

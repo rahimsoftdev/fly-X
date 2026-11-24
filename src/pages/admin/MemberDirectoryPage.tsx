@@ -67,6 +67,63 @@ const updateMember = async (id: string, body: EditForm): Promise<void> => {
   await api.patch(`/users/${id}`, body);
 };
 
+/* ---------------- Loading skeleton ---------------- */
+const Bone = ({ className = "" }: { className?: string }) => (
+  <div className={`animate-pulse rounded-md bg-(--card) ${className}`} />
+);
+
+const MemberSkeleton = ({ rows = LIMIT }: { rows?: number }) => (
+  <>
+    {/* Table skeleton (lg+) */}
+    <div className="hidden rounded-xl border border-(--border-color) lg:block">
+      <div className="flex items-center gap-4 border-b border-(--border-color) px-4 py-3">
+        <Bone className="h-3 w-[16%]" />
+        <Bone className="h-3 w-[15%]" />
+        <Bone className="h-3 w-[24%]" />
+        <Bone className="h-3 w-[24%]" />
+        <Bone className="h-3 w-[11%]" />
+        <Bone className="ml-auto h-3 w-[6%]" />
+      </div>
+      {Array.from({ length: rows }).map((_, i) => (
+        <div
+          key={i}
+          className="flex items-center gap-4 border-b border-(--border-color) px-4 py-4 last:border-b-0"
+        >
+          <Bone className="h-4 w-[16%]" />
+          <Bone className="h-4 w-[15%]" />
+          <Bone className="h-4 w-[24%]" />
+          <Bone className="h-4 w-[24%]" />
+          <Bone className="h-4 w-[11%]" />
+          <Bone className="ml-auto h-8 w-8 rounded-full" />
+        </div>
+      ))}
+    </div>
+
+    {/* Card skeleton (mobile + tablet) */}
+    <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:hidden">
+      {Array.from({ length: Math.min(rows, 6) }).map((_, i) => (
+        <div
+          key={i}
+          className="rounded-xl border border-(--border-color) p-4"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="w-full space-y-2">
+              <Bone className="h-4 w-1/2" />
+              <Bone className="h-3 w-1/3" />
+            </div>
+            <Bone className="h-9 w-9 shrink-0 rounded-full" />
+          </div>
+          <div className="mt-4 space-y-3 border-t border-(--border-color) pt-4">
+            <Bone className="h-3 w-full" />
+            <Bone className="h-3 w-4/5" />
+            <Bone className="h-3 w-1/4" />
+          </div>
+        </div>
+      ))}
+    </div>
+  </>
+);
+
 /* ---------------- Row actions (3-dot) ---------------- */
 const RowActions = ({
   onView,
@@ -506,11 +563,14 @@ const MemberDirectoryPage = () => {
   const items = data?.items ?? [];
   const meta = data?.meta;
 
+  // প্রথমবার load হওয়ার সময় skeleton দেখাবে, তখন আসল table/card লুকানো থাকবে
+  const isInitialLoading = isLoading && !data;
+
   const from = meta && meta.total > 0 ? (meta.page - 1) * meta.limit + 1 : 0;
   const to = meta ? Math.min(meta.page * meta.limit, meta.total) : 0;
 
   return (
-    <div className="mx-auto w-full max-w-7xl space-y-5 sm:space-y-6">
+    <div className="mx-auto w-full space-y-5 sm:space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-xl font-bold leading-tight text-(--heading-text) sm:text-2xl lg:text-3xl">
@@ -527,100 +587,101 @@ const MemberDirectoryPage = () => {
         </p>
       )}
 
+      {/* Skeleton (প্রথমবার loading) */}
+      {isInitialLoading && <MemberSkeleton />}
+
       {/* Table (lg+) */}
-      <div className="hidden rounded-xl border border-(--border-color) lg:block">
-        <table className="w-full table-fixed text-left text-sm">
-          <thead>
-            <tr className="border-b border-(--border-color) text-xs font-medium text-(--paragraph-text)">
-              <th className="w-[16%] px-4 py-3">Name</th>
-              <th className="w-[15%] px-4 py-3">Phone Number</th>
-              <th className="w-[24%] px-4 py-3">Email</th>
-              <th className="w-[24%] px-4 py-3">Address</th>
-              <th className="w-[11%] px-4 py-3">Payment</th>
-              <th className="w-[10%] px-4 py-3 text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody className={isLoading ? "opacity-60" : ""}>
-            {items.map((m) => (
-              <tr
-                key={m.id}
-                className="border-b border-(--border-color) align-middle text-(--heading-text) last:border-b-0"
-              >
-                <td className="break-words px-4 py-4 font-medium">{m.name}</td>
-                <td className="whitespace-nowrap px-4 py-4">{m.phone}</td>
-                <td className="break-all px-4 py-4">{m.email}</td>
-                <td className="break-words px-4 py-4">{m.fullAddress}</td>
-                <td className="px-4 py-4">{PAYMENT}</td>
-                <td className="px-4 py-2 text-right">
-                  <div className="flex justify-end">
-                    <RowActions
-                      onView={() => setSelected(m)}
-                      onEdit={() => setEditing(m)}
-                    />
-                  </div>
-                </td>
+      {!isInitialLoading && (
+        <div className="hidden rounded-xl border border-(--border-color) lg:block">
+          <table className="w-full table-fixed text-left text-sm">
+            <thead>
+              <tr className="border-b border-(--border-color) text-xs font-medium text-(--paragraph-text)">
+                <th className="w-[16%] px-4 py-3">Name</th>
+                <th className="w-[15%] px-4 py-3">Phone Number</th>
+                <th className="w-[24%] px-4 py-3">Email</th>
+                <th className="w-[24%] px-4 py-3">Address</th>
+                <th className="w-[11%] px-4 py-3">Payment</th>
+                <th className="w-[10%] px-4 py-3 text-right">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className={isLoading ? "opacity-60" : ""}>
+              {items.map((m) => (
+                <tr
+                  key={m.id}
+                  className="border-b border-(--border-color) align-middle text-(--heading-text) last:border-b-0"
+                >
+                  <td className="break-words px-4 py-4 font-medium">{m.name}</td>
+                  <td className="whitespace-nowrap px-4 py-4">{m.phone}</td>
+                  <td className="break-all px-4 py-4">{m.email}</td>
+                  <td className="break-words px-4 py-4">{m.fullAddress}</td>
+                  <td className="px-4 py-4">{PAYMENT}</td>
+                  <td className="px-4 py-2 text-right">
+                    <div className="flex justify-end">
+                      <RowActions
+                        onView={() => setSelected(m)}
+                        onEdit={() => setEditing(m)}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* Cards (mobile + tablet) */}
-      <div
-        className={`grid gap-3 sm:grid-cols-2 sm:gap-4 lg:hidden ${
-          isLoading ? "opacity-60" : ""
-        }`}
-      >
-        {items.map((m) => (
-          <div
-            key={m.id}
-            className="rounded-xl border border-(--border-color) p-4"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-(--heading-text)">
-                  {m.name}
-                </p>
-                <p className="mt-0.5 text-xs text-(--paragraph-text)">
-                  {m.phone}
-                </p>
+      {!isInitialLoading && (
+        <div
+          className={`grid gap-3 sm:grid-cols-2 sm:gap-4 lg:hidden ${
+            isLoading ? "opacity-60" : ""
+          }`}
+        >
+          {items.map((m) => (
+            <div
+              key={m.id}
+              className="rounded-xl border border-(--border-color) p-4"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-(--heading-text)">
+                    {m.name}
+                  </p>
+                  <p className="mt-0.5 text-xs text-(--paragraph-text)">
+                    {m.phone}
+                  </p>
+                </div>
+                <div className="shrink-0">
+                  <RowActions
+                    onView={() => setSelected(m)}
+                    onEdit={() => setEditing(m)}
+                  />
+                </div>
               </div>
-              <div className="shrink-0">
-                <RowActions
-                  onView={() => setSelected(m)}
-                  onEdit={() => setEditing(m)}
-                />
-              </div>
+
+              <dl className="mt-4 grid grid-cols-1 gap-3 border-t border-(--border-color) pt-4 text-xs">
+                <div className="min-w-0">
+                  <dt className="text-(--paragraph-text)">Email</dt>
+                  <dd className="mt-0.5 break-all font-medium text-(--heading-text)">
+                    {m.email}
+                  </dd>
+                </div>
+                <div className="min-w-0">
+                  <dt className="text-(--paragraph-text)">Address</dt>
+                  <dd className="mt-0.5 break-words font-medium text-(--heading-text)">
+                    {m.fullAddress}
+                  </dd>
+                </div>
+                <div className="min-w-0">
+                  <dt className="text-(--paragraph-text)">Payment</dt>
+                  <dd className="mt-0.5 font-medium text-(--heading-text)">
+                    {PAYMENT}
+                  </dd>
+                </div>
+              </dl>
             </div>
-
-            <dl className="mt-4 grid grid-cols-1 gap-3 border-t border-(--border-color) pt-4 text-xs">
-              <div className="min-w-0">
-                <dt className="text-(--paragraph-text)">Email</dt>
-                <dd className="mt-0.5 break-all font-medium text-(--heading-text)">
-                  {m.email}
-                </dd>
-              </div>
-              <div className="min-w-0">
-                <dt className="text-(--paragraph-text)">Address</dt>
-                <dd className="mt-0.5 break-words font-medium text-(--heading-text)">
-                  {m.fullAddress}
-                </dd>
-              </div>
-              <div className="min-w-0">
-                <dt className="text-(--paragraph-text)">Payment</dt>
-                <dd className="mt-0.5 font-medium text-(--heading-text)">
-                  {PAYMENT}
-                </dd>
-              </div>
-            </dl>
-          </div>
-        ))}
-      </div>
-
-      {isLoading && !data && (
-        <p className="py-12 text-center text-sm text-(--paragraph-text)">
-          Loading...
-        </p>
+          ))}
+        </div>
       )}
 
       {!isLoading && !error && items.length === 0 && (
