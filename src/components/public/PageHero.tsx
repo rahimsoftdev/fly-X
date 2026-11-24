@@ -20,8 +20,8 @@ export default function PageHero({
     aria-hidden={imageAlt === ""}
     decoding="async"
     fetchPriority="high"
-    className="absolute inset-0 -z-10 h-full w-full object-cover object-center
-               transition-[filter] duration-300 dark:brightness-75"
+    className="absolute inset-0 -z-10 h-full w-full  object-center
+               transition-[filter] duration-300 dark:brightness-75 "
   />
 
   <div className="container-main">

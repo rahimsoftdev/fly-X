@@ -8,6 +8,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import membersImg from "@/assets/images/membersImg.png"; // avatar group image (2 faces)
+import { useEffect, useState } from "react";
+import { api } from "@/lib/axios";
 
 /* ------------------------------------------------------------------ */
 /* Static data (edit here to change content, no need to touch the JSX) */
@@ -48,6 +50,16 @@ const formatUSD = (value: number): string =>
   }).format(value);
 
 export default function PrivateJetPricing() {
+
+  const [totalUser, setTotalUser] = useState()
+  useEffect(()=>{
+    const getData = async ()=>{
+      const res = await api.get('/users/count')
+      console.log(res?.data?.data?.totalUsers, 'total user')
+      setTotalUser(res?.data?.data?.totalUsers)
+    }
+    getData()
+  },[])
   // Cost per member is calculated, so changing the numbers above updates everything
   const costPerMember = TOTAL_CHARTER_COST / MEMBERS_ON_FLIGHT;
 
@@ -141,7 +153,7 @@ export default function PrivateJetPricing() {
                 />
                 {/* "+6" shows the remaining members not visible in the avatars */}
                 <span className="px-2 text-xs font-semibold text-white">
-                  +{MEMBERS_ON_FLIGHT - 2}
+                  +{Number(totalUser) - 2}
                 </span>
               </div>
               <div>
@@ -149,7 +161,7 @@ export default function PrivateJetPricing() {
                   Members Join Flight
                 </p>
                 <p className="text-sm font-semibold text-(--heading-text) md:text-base">
-                  {MEMBERS_ON_FLIGHT} Members
+                  {totalUser} Members
                 </p>
               </div>
             </div>

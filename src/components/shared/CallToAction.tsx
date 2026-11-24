@@ -41,7 +41,7 @@ export default function CallToAction({
                 aria-hidden={imageAlt === ""}
                 loading="lazy"
                 decoding="async"
-                className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
+                className="absolute inset-0 -z-20 h-full w-full  object-center"
             />
 
             {/* Dark overlay: text readable thakar jonno (light/dark dui mode e same) */}
