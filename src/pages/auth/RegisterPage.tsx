@@ -1,6 +1,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+
 import { Navigate, useNavigate } from "react-router";
-import { CheckCircle2, CreditCard, ImagePlus, Lock } from "lucide-react";
+import { CheckCircle2, CreditCard, ImagePlus, Lock, Eye, EyeOff } from "lucide-react";
 import FormField from "@/components/ui/FormField";
 import type { RegisterPayload } from "@/types/user.type";
 import { register } from "@/utils/auth.util";
@@ -13,6 +14,8 @@ const initialForm: RegisterPayload = {
 };
 
 export default function RegisterPage() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
   const [form, setForm] = useState<RegisterPayload>(initialForm);
   const [error, setError] = useState("");
@@ -153,11 +156,31 @@ export default function RegisterPage() {
             placeholder="Enter your email" value={form.email} onChange={handleChange} />
         </div>
 
-        <FormField id="password" name="password" type="password" label="Password" required
-          placeholder="Enter your password" value={form.password} onChange={handleChange} />
+        <div className="relative">
+          <FormField id="password" name="password" type={showPassword ? "text" : "password"} label="Password" required
+            placeholder="Enter your password" value={form.password} onChange={handleChange} />
+          <button
+            type="button"
+            onClick={() => setShowPassword((s) => !s)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            className="absolute bottom-3.5 right-3 cursor-pointer text-(--paragraph-text) hover:text-primary"
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
 
-        <FormField id="confirmPassword" name="confirmPassword" type="password" label="Confirm Password" required
-          placeholder="Confirm password" value={form.confirmPassword} onChange={handleChange} />
+        <div className="relative">
+          <FormField id="confirmPassword" name="confirmPassword" type={showConfirm ? "text" : "password"} label="Confirm Password" required
+            placeholder="Confirm password" value={form.confirmPassword} onChange={handleChange} />
+          <button
+            type="button"
+            onClick={() => setShowConfirm((s) => !s)}
+            aria-label={showConfirm ? "Hide password" : "Show password"}
+            className="absolute bottom-3.5 right-3 cursor-pointer text-(--paragraph-text) hover:text-primary"
+          >
+            {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
 
         {/* Profile photo upload */}
         <div className="space-y-2">
